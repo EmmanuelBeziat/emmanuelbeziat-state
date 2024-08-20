@@ -1,0 +1,27 @@
+{
+  "name": "emmanuelbeziat-push",
+  "version": "1.0.0",
+  "description": "🔔 Send push notifications, duh.",
+  "main": "index.js",
+  "author": {
+		"name": "Emmanuel Béziat",
+		"email": "contact@emmanuelbeziat.com"
+	},
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/EmmanuelBeziat/emmanuelbeziat-push.git"
+  },
+  "license": "GPL-3.0-or-later",
+  "keywords": [
+    "push",
+    "nodejs"
+  ],
+  "bugs": {
+    "url": "https://github.com/EmmanuelBeziat/emmanuelbeziat-push/issues"
+  },
+  "homepage": "https://github.com/EmmanuelBeziat/emmanuelbeziat-push#readme",
+  "type": "module",
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
+}
