@@ -4,9 +4,9 @@
   "description": "🔔 Send push notifications, duh.",
   "main": "index.js",
   "author": {
-		"name": "Emmanuel Béziat",
-		"email": "contact@emmanuelbeziat.com"
-	},
+    "name": "Emmanuel Béziat",
+    "email": "contact@emmanuelbeziat.com"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/EmmanuelBeziat/emmanuelbeziat-push.git"
@@ -21,7 +21,20 @@
   },
   "homepage": "https://github.com/EmmanuelBeziat/emmanuelbeziat-push#readme",
   "type": "module",
-  "scripts": {},
-  "dependencies": {},
-  "devDependencies": {}
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "node --watch -r dotenv/config src/index.js",
+    "prod": "nodemon -r dotenv/config src/index.js",
+    "deploy": "pm2 start src/index.js --name 'emmanuelb-push' --node-args='-r dotenv/config' || pm2 reload emmanuelb-push --update-env"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.3",
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  }
 }
