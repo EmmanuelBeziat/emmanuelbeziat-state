@@ -1,0 +1,13 @@
+{% extends "layout/index.njk" %}
+
+{% block main %}
+
+<section class="logs-list">
+	{% if logs and logs.length %}
+		{% for log in logs %}
+			{% include "partials/log.njk" %}
+		{% endfor %}
+	{% endif %}
+</section>
+
+{% endblock %}

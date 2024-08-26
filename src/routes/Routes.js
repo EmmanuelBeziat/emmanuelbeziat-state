@@ -1,4 +1,4 @@
-import { PushController } from '../controllers/index.js'
+import { HomeController, LogController } from '../controllers/index.js'
 
 /**
  * Defines application routes and their corresponding controllers.
@@ -6,7 +6,8 @@ import { PushController } from '../controllers/index.js'
 export class Router {
 	constructor () {
 		this.apiURL = '/'
-		this.push = new PushController()
+		this.home = new HomeController()
+		this.log = new LogController()
 	}
 
 	/**
@@ -14,6 +15,10 @@ export class Router {
 	 * @param {Object} app
 	 */
 	routes(app) {
-		app.get(this.apiURL, (req, reply) => this.push.index(req, reply))
+		app.get(this.apiURL, (req, reply) => {
+			this.log.list(req, reply)
+				.then(data => { this.home.index(req, reply, data) })
+				.catch (error => { reply.status(500).send(error) })
+		})
 	}
 }

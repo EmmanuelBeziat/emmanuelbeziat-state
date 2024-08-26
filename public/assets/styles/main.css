@@ -1,0 +1,130 @@
+:root {
+	--color-background: #1e192b;
+	--color-text: #eeeeee;
+	--color-subwhite: #f9fad3;
+	--color-green: #c3e88d;
+	--color-blue: #4eb0e4;
+	--color-violet: #a48aec;
+	--color-yellow: #ffcb6b;
+	--color-red: #ec4185;
+	--color-black: var(--color-background-light);
+	--color-separator: var(--color-background-light);
+	--color-background-light: #282139;
+	--color-background-lighter: #4f4271;
+	--color-background-dark: #1b1627;
+	--color-background-darker: #171320;
+	--font-stack-common: "Source Sans 3", system-ui, "Segoe UI", "Helvetica Neue", Roboto, Arial, sans-serif;
+	--font-size-base: 16px;
+	--font-size-heading-1: 3.815rem;
+	--font-size-heading-2: 3.052rem;
+	--font-size-heading-3: 2.441rem;
+	--font-size-heading-4: 1.953rem;
+	--font-size-heading-5: 1.563rem;
+	--font-size-heading-6: 1.25rem;
+	--ease-back-out: cubic-bezier(.295, 1.75, .69, .9);
+	--gutter-screen: 2rem;
+
+	--container-width: 50rem;
+}
+
+body {
+	margin: 0;
+	font: 400 var(--font-size-base)/1.25 var(--font-stack-common);
+	background: var(--color-background);
+	color: var(--color-text);
+}
+
+.page {
+	display: grid;
+	min-height: 100dvh;
+	grid-template-columns: 1fr clamp(10rem, 100vw, var(--container-width)) 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "Header Header Header"
+    ". Main ."
+    "Footer Footer Footer";
+
+	.header {
+		grid-area: Header;
+		padding: calc(var(--gutter-screen) / 2) var(--gutter-screen);
+
+		.header-title {
+			margin: 0;
+			color: var(--color-green);
+
+			span {
+				color: var(--color-blue);
+
+				&::before {
+					content: ":: ";
+					color: var(--color-text);
+				}
+			}
+		}
+	}
+
+	.main {
+		grid-area: Main;
+		padding: var(--gutter-screen);
+	}
+
+	.footer {
+		grid-area: Footer;
+		padding: calc(var(--gutter-screen) / 2) var(--gutter-screen);
+		text-align: center;
+	}
+}
+
+.logs-list {
+	display: flex;
+	flex-direction: column;
+	gap: .5rem;
+}
+
+.log {
+	border-radius: .25rem;
+	padding: calc(var(--gutter-screen) / 2);
+	background: var(--log-bg, var(--color-background-light));
+	color: var(--log-color, var(--color-text));
+	border: 1px solid var(--log-border, var(--color-background-lighter));
+
+	&.success {
+		--log-state: var(--color-green);
+		--log-border: var(--color-green);
+	}
+	&.fail {
+		--log-state: var(--color-red);
+		--log-border: var(--color-red);
+	}
+	&.build {
+		--log-state: var(--color-blue);
+		--log-border: var(--color-blue);
+	}
+
+	.log-header {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.log-title {
+		margin-block: 0;
+	}
+
+	.log-state {
+		background: var(--log-state, var(--color-subwhite));
+		color: var(--color-background);
+		border-radius: .5rem;
+		padding-inline: .45em;
+		font-size: 85%;
+	}
+
+	.log-content {
+		margin-top: .25rem;
+
+		summary {
+			cursor: pointer;
+			margin-bottom: .25rem;
+		}
+	}
+}

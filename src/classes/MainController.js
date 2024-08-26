@@ -16,7 +16,7 @@ class MainController {
    * @param {Object} reply The reply object to send the response.
    */
   index (req, reply) {
-    this.model.getAllFiles()
+    this.model.getAllLogs()
       .then(data => reply.send(data.reverse()))
       .catch(err => reply.code(404).send(err))
   }

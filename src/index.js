@@ -1,6 +1,14 @@
 import App from './App.js'
 import cors from '@fastify/cors'
+import view from '@fastify/view'
+import fstatic from '@fastify/static'
 import favicons from 'fastify-favicon'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import nunjucks from 'nunjucks'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // CORS
 App.register(cors, {
@@ -13,6 +21,19 @@ App.register(cors, {
 
 		cb(new Error('Not allowed'))
 	}
+})
+
+App.register(view, {
+  engine: {
+    nunjucks
+  },
+	templates: [
+		'./src/views'
+	]
+})
+
+App.register(fstatic, {
+	root: path.join(__dirname, '../public'),
 })
 
 App.register(favicons, {
