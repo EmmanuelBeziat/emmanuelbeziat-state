@@ -1,39 +1,37 @@
-import fs from 'fs'
+import fs from 'fs/promises'
 import path from 'path'
+import State from '../classes/State.js'
 
 class Log {
 	constructor () {
 		this.path = process.env.PATH_LOGS
+		this.state = new State().service
 	}
 
 	/**
    * Retrieves all files from the folder, reads their content, and returns it.
    * @returns {Promise<Array>} A promise that resolves with the content of all files.
    */
-  getAllLogs () {
-    return new Promise((resolve, reject) => {
-      fs.readdir(path.resolve(this.path), 'utf8', (error, folders) => {
+  async getAllLogs () {
+    try {
+			const folders = await fs.readdir(path.resolve(this.path), 'utf8')
+			if (!folders.length) throw new Error('No folders in folder')
 
-        if (error) reject('No folder found.')
-        if (!folders.length) reject('No folders in folder')
+			const validFolders = await Promise.all(folders.map(async folder => {
+				const stats = await fs.stat(path.resolve(this.path, folder))
+				return stats.isDirectory() ? folder : null
+			}))
 
-        Promise.all(folders.map(folder => {
-					return new Promise((response, reject) => {
-						fs.stat(path.resolve(this.path, folder), (error, stats) => {
-							if (error || !stats.isDirectory()) return response(null)
-							response(folder)
-						})
-					})
-				}))
-				.then(folders => folders.filter(folder => folder !== null))
-				.then(folders => Promise.all(folders.map(folder => {
-					return this.getFileContent(path.join(folder, 'output.log'))
-						.then(content => ({ name: folder, state: 'success', content }))
-				})))
-        .then(fileContents => { resolve(fileContents) })
-				.catch(reject)
-      })
-    })
+			const logs = await Promise.all(validFolders.filter(Boolean).map(async folder => {
+				const content = await this.getLogContent(path.join(folder, 'output.log'))
+				return { name: folder, state: this.state.machine.current, content }
+			}))
+
+			return logs
+		}
+		catch (error) {
+			throw new Error(error.message || 'An error occurred while retrieving logs')
+		}
   }
 
 	/**
@@ -41,13 +39,26 @@ class Log {
    * @param {string} fileName The name of the file to read.
    * @returns {Promise<Object>} A promise that resolves with the parsed content of the file.
    */
-	getFileContent (fileName) {
-    return new Promise((resolve, reject) => {
-      fs.readFile(path.resolve(this.path, fileName), 'utf8', (error, file) => {
-        if (error) reject(error)
-        resolve(file)
-      })
-    })
+	async getLogContent (fileName) {
+    try {
+			const file = await fs.readFile(path.resolve(this.path, fileName), 'utf8')
+			return file
+		}
+		catch (error) {
+			throw new Error(error.message || 'An error occurred while reading the file')
+		}
+	}
+
+	deploy () {
+		this.state.send('deploy')
+	}
+
+	success () {
+		this.state.send('success')
+	}
+
+	failed () {
+		this.state.send('failed')
 	}
 }
 
