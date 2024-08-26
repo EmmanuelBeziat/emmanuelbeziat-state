@@ -25,6 +25,24 @@
 	--gutter-screen: 2rem;
 
 	--container-width: 50rem;
+
+	scroll-behavior: smooth;
+	scrollbar-gutter: stable;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+}
+
+html {
+	font-family: system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+	line-height: 1.15;
+	-webkit-text-size-adjust: 100%;
+	-moz-tab-size: 4;
+	tab-size: 4;
+	box-sizing: border-box;
 }
 
 body {
@@ -32,6 +50,10 @@ body {
 	font: 400 var(--font-size-base)/1.25 var(--font-stack-common);
 	background: var(--color-background);
 	color: var(--color-text);
+}
+
+pre {
+	white-space: break-spaces;
 }
 
 .page {
