@@ -12,4 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (event.target.nodeName === 'DIALOG') { dialog.close() }
 		})
 	})
+
+	hljs.highlightAll()
 })
