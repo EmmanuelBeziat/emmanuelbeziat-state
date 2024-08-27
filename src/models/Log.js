@@ -26,6 +26,7 @@ class Log {
 				const logFilePath = path.join(folder, 'output.log')
 				try {
 					const content = await this.getLogContent(logFilePath)
+					if (!content) return null
 					return { name: folder, state: this.state.machine.current, content }
 				}
 				catch (error) {
