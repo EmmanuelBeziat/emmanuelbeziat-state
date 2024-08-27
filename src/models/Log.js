@@ -29,8 +29,8 @@ class Log {
 					if (!content) return null
 					return { name: folder, state: this.state.machine.current, content }
 				}
+				// Skip if folder is empty
 				catch (error) {
-					// Skip if folder is empty
 					return null
 				}
 			})).then(results => results.filter(Boolean))
