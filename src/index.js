@@ -24,12 +24,8 @@ App.register(cors, {
 })
 
 App.register(view, {
-  engine: {
-    nunjucks
-  },
-	templates: [
-		'./src/views'
-	]
+  engine: { nunjucks },
+	root: './src/views',
 })
 
 App.register(fstatic, {

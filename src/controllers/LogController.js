@@ -10,4 +10,8 @@ export class LogController {
 			.then(data => data)
 			.catch(err => { throw err })
 	}
+
+	state (req, reply) {
+		return this.model.stateChange(req.params.name, req.params.state)
+	}
 }

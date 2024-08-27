@@ -24,7 +24,7 @@
 	--ease-back-out: cubic-bezier(.295, 1.75, .69, .9);
 	--gutter-screen: 2rem;
 
-	--container-width: 50rem;
+	--container-width: 25rem;
 
 	scroll-behavior: smooth;
 	scrollbar-gutter: stable;
@@ -52,8 +52,13 @@ body {
 	color: var(--color-text);
 }
 
-pre {
-	white-space: break-spaces;
+.button {
+	cursor: pointer;
+	background: var(--color-background-lighter);
+	border: 1px solid var(--color-background-light);
+	border-radius: .25rem;
+	padding: .5em 1em;
+	color: var(--color-subwhite);
 }
 
 .page {
@@ -110,15 +115,15 @@ pre {
 	color: var(--log-color, var(--color-text));
 	border: 1px solid var(--log-border, var(--color-background-lighter));
 
-	&:is(.success, .idle) {
+	&:is([data-state="success"], [data-state="idle"]) {
 		--log-state: var(--color-green);
 		--log-border: var(--color-green);
 	}
-	&.fail {
+	&[data-state="fail"] {
 		--log-state: var(--color-red);
 		--log-border: var(--color-red);
 	}
-	&.build {
+	&[data-state="build"] {
 		--log-state: var(--color-blue);
 		--log-border: var(--color-blue);
 	}
@@ -143,10 +148,70 @@ pre {
 
 	.log-content {
 		margin-top: .25rem;
+	}
 
-		summary {
-			cursor: pointer;
-			margin-bottom: .25rem;
+	.log-details-modal {
+		background: var(--color-background);
+		border: 1px solid var(--log-border, var(--color-background-lighter));
+		max-height: calc(100dvh - 2rem);
+		border-radius: .25rem;
+		padding: 1rem;
+		display: none;
+		opacity: 0;
+		flex-direction: column;
+		gap: .5rem;
+
+		transition: .25s ease-in-out;
+		transition-behavior: allow-discrete;
+		transform: translateY(-1rem);
+
+		&[open] {
+			opacity: 1;
+			display: flex;
+			transform: translateY(0);
+
+			@starting-style {
+				opacity: 0;
+				transform: translateY(-1rem);
+			}
+
+			&::backdrop {
+				opacity: .75;
+				display: block;
+				filter: blur(5px);
+
+				@starting-style {
+					opacity: 0;
+					filter: blur(0);
+				}
+			}
+		}
+
+		&::backdrop {
+			opacity: .75;
+			filter: blur(0);
+			background: var(--color-background-darker);
+			transition: .25s ease-in-out;
+			transition-behavior: allow-discrete;
+		}
+	}
+
+	.log-details-name {
+		margin-block: 0;
+		color: var(--color-text);
+	}
+
+	.log-details-code {
+		overflow-y: scroll;
+		padding: .5rem;
+		background: var(--color-background-darker);
+		border: 1px solid var(--color-background-light);
+		color: var(--color-subwhite);
+		border-radius: .25rem;
+
+		pre {
+			white-space: break-spaces;
 		}
 	}
 }
+

@@ -1,12 +1,10 @@
-<article class="log {{ log.state }}">
+<article class="log" data-state="{{ log.state }}">
 	<header class="log-header">
 		<h1 class="log-title">{{ log.name }}</h1>
 		<div class="log-state">{{ log.state }}</div>
 	</header>
 
-	<details class="log-content">
-		<summary>Logs content</summary>
-		<pre><code>{{ log.content }}</code></pre>
-	</details>
-
+	<div class="log-content">
+		{% include "partials/modal.njk" %}
+	</div>
 </article>

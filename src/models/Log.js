@@ -49,6 +49,11 @@ class Log {
 		}
 	}
 
+	stateChange (name, state) {
+		console.log(name, state)
+		this.state.send(state)
+	}
+
 	deploy () {
 		this.state.send('deploy')
 	}
