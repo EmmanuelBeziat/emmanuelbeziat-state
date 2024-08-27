@@ -23,9 +23,16 @@ class Log {
 			}))
 
 			const logs = await Promise.all(validFolders.filter(Boolean).map(async folder => {
-				const content = await this.getLogContent(path.join(folder, 'output.log'))
-				return { name: folder, state: this.state.machine.current, content }
-			}))
+				const logFilePath = path.join(folder, 'output.log')
+				try {
+					const content = await this.getLogContent(logFilePath)
+					return { name: folder, state: this.state.machine.current, content }
+				}
+				catch (error) {
+					// Skip if folder is empty
+					return null
+				}
+			})).then(results => results.filter(Boolean))
 
 			return logs
 		}
