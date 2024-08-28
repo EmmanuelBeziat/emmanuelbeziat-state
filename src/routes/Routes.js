@@ -8,33 +8,45 @@ export class Router {
 		this.apiURL = '/'
 		this.home = new HomeController()
 		this.log = new LogController()
-	}
 
-	/**
-	 * Initializes routes and associates them with their respective controller actions
-	 * @param {Object} app
-	 */
-	routes(app) {
-		const opts = {
+		this.routeOptions = {
 			schema: {
 				querystring: {
 					code: { type: 'string' },
 				}
 			}
 		}
+	}
 
-		app.get(this.apiURL, (req, reply) => {
-			this.log.list(req, reply)
-				.then(data => { this.home.index(req, reply, data) })
-				.catch (error => { reply.status(500).send(error) })
-		})
+	/**
+	 * Initializes routes and associates them with their respective controller actions
+	 * @param {Object} app The fastify application instance
+	 */
+	routes(app) {
+		app.get(this.apiURL, this.handleHomeRequest.bind(this))
+		app.get(`${this.apiURL}log/:name/:state`, this.routeOptions, this.handleLogRequest.bind(this))
+	}
 
-		app.get(`${this.apiURL}log/:name/:state`, opts, (req, reply) => {
-			this.log.state(req, reply)
-			const isBrowser = req.headers['user-agent'] && req.headers['user-agent'].includes('Mozilla')
-			if (isBrowser) {
-				return reply.status(403).send('Access forbidden')
-			}
-		})
+	/**
+	 * Handles home routes request
+	 * @param {Object} req The request object
+	 * @param {Object} reply The reply object
+	 */
+	handleHomeRequest (req, reply) {
+		this.log.list(req, reply)
+			.then(data => { this.home.index(req, reply, data) })
+			.catch (error => { reply.status(500).send(error) })
+	}
+
+	/**
+	 * Handles log route request
+	 * @param {Object} req The request object
+	 * @param {Object} reply The reply object
+	 */
+	handleLogRequest (req, reply) {
+		this.log.state(req, reply)
+
+		const isBrowser = req.headers['user-agent'] && req.headers['user-agent'].includes('Mozilla')
+		if (isBrowser) return reply.status(403).send('Access forbidden')
 	}
 }

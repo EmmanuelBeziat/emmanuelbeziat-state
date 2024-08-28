@@ -1,4 +1,4 @@
-import App from './App.js'
+import App from './classes/App.js'
 import cors from '@fastify/cors'
 import view from '@fastify/view'
 import fstatic from '@fastify/static'
@@ -7,42 +7,61 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import nunjucks from 'nunjucks'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+/**
+ * Initializes the server with necessary plugins and configurations.
+ */
+class Server {
+	constructor () {
+		this.app = App
+		this.dirname = path.dirname(fileURLToPath(import.meta.url))
 
-// CORS
-App.register(cors, {
-	origin: (origin, cb) => {
-		// Allow requests from localhost or a specific domain
-		if (/localhost/.test(origin) || 'https://www.emmanuelbeziat.com') {
-			cb(null, true)
-			return
-		}
-
-		cb(new Error('Not allowed'))
+		this.setupPlugins()
 	}
-})
 
-App.register(view, {
-  engine: { nunjucks },
-	root: './src/views',
-})
+	setupPlugins () {
+		this.app.register(cors, {
+			origin: (origin, cb) => {
+				const allowedOrigins = [/localhost/]
+				const isAllowed = allowedOrigins.some(pattern => typeof pattern === 'string' ? pattern === origin : pattern.test(origin))
 
-App.register(fstatic, {
-	root: path.join(__dirname, '../public'),
-})
+				if (isAllowed || !origin) {
+					cb(null, true)
+				}
+				else {
+					cb(new Error('Not allowed'))
+				}
+			}
+		})
 
-App.register(favicons, {
-	path: './public/favicons',
-	name: 'favicon.ico'
-})
+		this.app.register(view, {
+			engine: { nunjucks },
+			root: './src/views'
+		})
 
-// Server start
-App.listen({ port: process.env.PORT || 3000, host: '127.0.0.1' })
-	.then(address => {
-		console.log(`Server started on ${address}`)
-	})
-	.catch(error => {
-		console.log(`Error starting server: ${error}`)
-		process.exit(1)
-	})
+		this.app.register(fstatic, {
+			root: path.join(this.dirname, '../public')
+		})
+
+		this.app.register(favicons, {
+			path: './public/favicons',
+			name: 'favicon.ico'
+		})
+	}
+
+	/**
+	 * Starts the server on the specified host and port
+	 */
+	start () {
+		this.app.listen({ port: process.env.PORT || 3000, host: process.env.HOST || '127.0.0.1' })
+			.then(address => {
+				console.log(`Server started on ${address}`)
+			})
+			.catch(error => {
+				console.log(`Error starting server: ${error}`)
+				process.exit(1)
+			})
+	}
+}
+
+const server = new Server()
+server.start()
