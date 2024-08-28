@@ -74,18 +74,6 @@ class Log {
 		console.log(name, state)
 		this.state.send(state)
 	}
-
-	deploy () {
-		this.state.send('deploy')
-	}
-
-	success () {
-		this.state.send('success')
-	}
-
-	failed () {
-		this.state.send('failed')
-	}
 }
 
 export default Log
