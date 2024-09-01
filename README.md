@@ -1,4 +1,4 @@
-# ![Emmanuel Béziat Logo](public/favicons/favicon-32x32.png) emmanuelbeziat-push :: Emmanuel Béziat
+# ![Emmanuel Béziat Logo](public/favicons/favicon-32x32.png) emmanuelbeziat-state :: Emmanuel Béziat
 
 🔔 Get some build logs out without needing to connect to my server.
 

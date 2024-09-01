@@ -1,5 +1,5 @@
 {
-  "name": "emmanuelbeziat-push",
+  "name": "emmanuelbeziat-state",
   "version": "1.0.0",
   "description": "🔔 Get some build logs out without needing to connect to my server",
   "main": "src/index.js",
@@ -9,26 +9,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/EmmanuelBeziat/emmanuelbeziat-push.git"
+    "url": "git+ssh://git@github.com/EmmanuelBeziat/emmanuelbeziat-state.git"
   },
   "license": "GPL-3.0-or-later",
   "keywords": [
-    "push",
     "nodejs",
 		"logs",
 		"fastify",
 		"nunjucks"
   ],
   "bugs": {
-    "url": "https://github.com/EmmanuelBeziat/emmanuelbeziat-push/issues"
+    "url": "https://github.com/EmmanuelBeziat/emmanuelbeziat-state/issues"
   },
-  "homepage": "https://github.com/EmmanuelBeziat/emmanuelbeziat-push#readme",
+  "homepage": "https://github.com/EmmanuelBeziat/emmanuelbeziat-state#readme",
   "type": "module",
   "scripts": {
     "start": "npm run dev",
     "dev": "node --watch -r dotenv/config src/index.js",
     "prod": "nodemon -r dotenv/config src/index.js",
-    "deploy": "pm2 start src/index.js --name 'emmanuelb-push' --node-args='-r dotenv/config' || pm2 reload emmanuelb-push --update-env",
+    "deploy": "pm2 start src/index.js --name 'emmanuelb-state' --node-args='-r dotenv/config' || pm2 reload emmanuelb-state --update-env",
     "test": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js",
     "test:routes": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Routes.test.js",
     "test:env": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Environment.test.js"
