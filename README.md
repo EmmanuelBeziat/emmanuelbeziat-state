@@ -1,10 +1,9 @@
-# emmanuelbeziat-push
-
-![Website](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?maxAge=2592000) ![Built with](https://img.shields.io/badge/built_with-fastify-blue.svg?style=flat) ![Built With](https://img.shields.io/badge/built_with-nunjucks-green.svg?style=flat
-)
+# ![Emmanuel Béziat Logo](public/favicons/favicon-32x32.png) emmanuelbeziat-push :: Emmanuel Béziat
 
 🔔 Get some build logs out without needing to connect to my server.
 
+![Website](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?maxAge=2592000) ![Built with](https://img.shields.io/badge/built_with-fastify-blue.svg?style=flat) ![Built With](https://img.shields.io/badge/built_with-nunjucks-green.svg?style=flat
+)
 
 ## What?
 
