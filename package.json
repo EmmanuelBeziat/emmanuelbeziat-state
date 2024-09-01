@@ -1,7 +1,7 @@
 {
   "name": "emmanuelbeziat-push",
   "version": "1.0.0",
-  "description": "🔔 Send push notifications, duh.",
+  "description": "🔔 Get some build logs out without needing to connect to my server",
   "main": "index.js",
   "author": {
     "name": "Emmanuel Béziat",
