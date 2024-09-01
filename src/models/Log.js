@@ -1,10 +1,12 @@
 import fs from 'fs/promises'
 import path from 'path'
 import State from '../classes/State.js'
+import { formatDate } from '../utils/format-date.js'
 
 class Log {
 	constructor () {
 		this.path = process.env.PATH_LOGS
+		this.fileName = process.env.NAME_LOGS
 		this.state = new State().service
 	}
 
@@ -46,9 +48,20 @@ class Log {
 	 */
 	async getLogsFromFolders (folders) {
 		const logs = await Promise.all(folders.map(async folder =>{
-			const logFilePath = path.join(folder, 'output.log')
+			const logFilePath = path.join(folder, this.fileName)
+
 			return this.getLogContent(logFilePath)
-				.then(content => content ? { name: folder, state: this.state.machine.current, content} : null)
+				.then(async content => {
+					if (!content) return null
+
+					const date = await this.getLogLastEdit(logFilePath)
+					return {
+						name: folder,
+						state: this.state.machine.current,
+						date: formatDate(date),
+						content
+					}
+				})
 				.catch(() => null) // Skip if folder is empty
 		}))
 
@@ -66,7 +79,17 @@ class Log {
 			return file
 		}
 		catch (error) {
-			throw new Error(error.message || 'An error occurend while reading the log file')
+			throw new Error(error.message || 'An error occurend while reading the log content')
+		}
+	}
+
+	async getLogLastEdit (filename) {
+		try {
+			const data = await fs.stat(path.resolve(this.path, filename))
+			return data.mtime
+		}
+		catch (error) {
+			throw new Error(error.message || 'An error occurend while reading the log data')
 		}
 	}
 

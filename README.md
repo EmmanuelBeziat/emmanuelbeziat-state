@@ -30,6 +30,7 @@ npm i
 PORT=3000
 HOST="127.0.0.1"
 PATH_LOGS="/var/logs/mywebsite"
+NAME_LOGS="mywebsite.log"
 ```
 
 
