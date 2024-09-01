@@ -18,7 +18,11 @@ class Log {
     try {
 			const folders = await this.getValidFolders()
 			const logs = await this.getLogsFromFolders(folders)
-			return logs
+
+			const sortedLogs = logs.sort((a, b) => b.date - a.date)
+			const formattedLogs = sortedLogs.map(log => ({...log, date: formatDate(log.date)}))
+
+			return formattedLogs
 		}
 		catch (error) {
 			throw new Error(error.message || 'Unable to read logs folders')
@@ -58,7 +62,7 @@ class Log {
 					return {
 						name: folder,
 						state: this.state.machine.current,
-						date: formatDate(date),
+						date,
 						content
 					}
 				})

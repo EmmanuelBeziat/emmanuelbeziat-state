@@ -1,6 +1,6 @@
 {
   "name": "emmanuelbeziat-state",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "🔔 Get some build logs out without needing to connect to my server",
   "main": "src/index.js",
   "author": {
