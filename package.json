@@ -2,7 +2,7 @@
   "name": "emmanuelbeziat-push",
   "version": "1.0.0",
   "description": "🔔 Get some build logs out without needing to connect to my server",
-  "main": "index.js",
+  "main": "src/index.js",
   "author": {
     "name": "Emmanuel Béziat",
     "email": "contact@emmanuelbeziat.com"
@@ -14,7 +14,10 @@
   "license": "GPL-3.0-or-later",
   "keywords": [
     "push",
-    "nodejs"
+    "nodejs",
+		"logs",
+		"fastify",
+		"nunjucks"
   ],
   "bugs": {
     "url": "https://github.com/EmmanuelBeziat/emmanuelbeziat-push/issues"
