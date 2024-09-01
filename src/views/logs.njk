@@ -3,7 +3,7 @@
 {% block main %}
 <section class="logs-list">
 	{% if logs and logs.length %}
-		{% for log in logs %}
+		{% for log in logs | sortByDate %}
 			{% include "partials/log.njk" %}
 		{% endfor %}
 	{% else %}

@@ -1,7 +1,6 @@
 import fs from 'fs/promises'
 import path from 'path'
 import State from '../classes/State.js'
-import { formatDate } from '../utils/format-date.js'
 
 class Log {
 	constructor () {
@@ -18,11 +17,7 @@ class Log {
     try {
 			const folders = await this.getValidFolders()
 			const logs = await this.getLogsFromFolders(folders)
-
-			const sortedLogs = logs.sort((a, b) => b.date - a.date)
-			const formattedLogs = sortedLogs.map(log => ({...log, date: formatDate(log.date)}))
-
-			return formattedLogs
+			return logs
 		}
 		catch (error) {
 			throw new Error(error.message || 'Unable to read logs folders')
