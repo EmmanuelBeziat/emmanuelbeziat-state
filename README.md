@@ -15,10 +15,10 @@
 
 ```bash
 # Get the repo
-git clone git+ssh://git@github.com/EmmanuelBeziat/emmanuelbeziat-push.git
+git clone git+ssh://git@github.com/EmmanuelBeziat/emmanuelbeziat-state.git
 
 # Navigate into project folder
-cd emmanuelbeziat-push
+cd emmanuelbeziat-state
 
 # Intall dependencies
 npm i
