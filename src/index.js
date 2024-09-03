@@ -6,7 +6,7 @@ import favicons from 'fastify-favicon'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import nunjucks from 'nunjucks'
-import { formatDate, sortByDate } from './utils/filters.js'
+import { formatDate, formatDateRelative, sortByDate } from './utils/filters.js'
 
 /**
  * Initializes the server with necessary plugins and configurations.
@@ -40,6 +40,7 @@ class Server {
 			options: {
 				onConfigure: env => {
 					env.addFilter('formatDate', formatDate)
+					env.addFilter('formatDateRelative', formatDateRelative)
 					env.addFilter('sortByDate', sortByDate)
 				}
 			}
