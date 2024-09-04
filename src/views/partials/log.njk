@@ -1,11 +1,9 @@
 <article class="log" data-state="{{ log.state }}">
-	<header class="log-header">
+	<header class="log-header log-details-opener">
 		<h1 class="log-title">{{ log.name }}</h1>
 		<div class="log-state">{{ log.state }}</div>
 		<time class="log-time" data-realtime timestamp="{{ log.date }}">{{ log.date | formatDateRelative }}</time>
 	</header>
 
-	<div class="log-content">
-		{% include "partials/modal.njk" %}
-	</div>
+	{% include "partials/modal.njk" %}
 </article>

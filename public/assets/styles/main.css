@@ -116,7 +116,6 @@ body {
 
 .log {
 	border-radius: .25rem;
-	padding: calc(var(--gutter-screen) / 2);
 	background: var(--log-bg, var(--color-background-light));
 	color: var(--log-color, var(--color-text));
 	border: 1px solid var(--log-border, var(--color-background-lighter));
@@ -144,6 +143,7 @@ body {
 	}
 
 	.log-header {
+		padding: calc(var(--gutter-screen) / 2);
 		display: grid;
 		grid-template-columns: 1fr auto;
 		grid-template-rows: repeat(2, auto);
@@ -152,6 +152,7 @@ body {
 			"Time Time";
 		gap: .05rem 1rem;
 		align-items: center;
+		cursor: pointer;
 	}
 
 	.log-title {
@@ -175,11 +176,6 @@ body {
 		&::first-letter {
 			text-transform: uppercase;
 		}
-	}
-
-	.log-content {
-		margin-top: .75rem;
-		text-align: center;
 	}
 
 	.log-details-modal {
