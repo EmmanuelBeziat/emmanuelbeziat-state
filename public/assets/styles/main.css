@@ -144,16 +144,23 @@ body {
 	}
 
 	.log-header {
-		display: flex;
+		display: grid;
+		grid-template-columns: 1fr auto;
+		grid-template-rows: repeat(2, auto);
+		grid-template-areas:
+			"Name Status"
+			"Time Time";
+		gap: .05rem 1rem;
 		align-items: center;
-		gap: 1rem;
 	}
 
 	.log-title {
+		grid-area: Name;
 		margin-block: 0;
 	}
 
 	.log-state {
+		grid-area: Status;
 		background: var(--log-state, var(--color-subwhite));
 		color: var(--color-background);
 		border-radius: .5rem;
@@ -161,8 +168,18 @@ body {
 		font-size: 85%;
 	}
 
+	.log-time {
+		grid-area: Time;
+		font-style: italic;
+
+		&::first-letter {
+			text-transform: uppercase;
+		}
+	}
+
 	.log-content {
-		margin-top: .5rem;
+		margin-top: .75rem;
+		text-align: center;
 	}
 
 	.log-details-modal {

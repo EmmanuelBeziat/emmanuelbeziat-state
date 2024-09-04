@@ -2,6 +2,7 @@
 	<header class="log-header">
 		<h1 class="log-title">{{ log.name }}</h1>
 		<div class="log-state">{{ log.state }}</div>
+		<time class="log-time" data-realtime timestamp="{{ log.date }}">{{ log.date | formatDateRelative }}</time>
 	</header>
 
 	<div class="log-content">
