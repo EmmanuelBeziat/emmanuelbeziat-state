@@ -104,10 +104,10 @@ class Log {
 		const statusLogPath = path.join(folder, this.statusFile)
 		try {
 			const content = await this.getLogContent(statusLogPath)
-			return content.trim()
+			return content.trim() || 'idle'
 		}
 		catch (error) {
-			throw new Error(error.message || 'Unable to read status.log')
+			return 'idle'
 		}
 	}
 }
