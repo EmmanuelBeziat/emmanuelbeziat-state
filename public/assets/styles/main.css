@@ -119,26 +119,31 @@ body {
 	background: var(--log-bg, var(--color-background-light));
 	color: var(--log-color, var(--color-text));
 	border: 1px solid var(--log-border, var(--color-background-lighter));
-	/* box-shadow: 0 0 5px color-mix(in srgb, var(--log-primary), #0000 65%); */
+	transition: .2s ease-in-out;
 
-	&[data-state="idle"] {
+	&:hover,
+	&:focus-visible {
+		box-shadow: 0 0 5px color-mix(in srgb, var(--log-primary), #0000 65%);
+	}
+
+	&[data-status="idle"] {
 		--log-primary: var(--color-background-lighter);
-		--log-state: var(--color-subwhite);
+		--log-status: var(--color-subwhite);
 		--log-border: var(--color-background-lighter);
 	}
-	&[data-state="success"] {
+	&[data-status="success"] {
 		--log-primary: var(--color-green);
-		--log-state: var(--color-green);
+		--log-status: var(--color-green);
 		--log-border: var(--color-green);
 	}
-	&[data-state="fail"] {
+	&[data-status="failed"] {
 		--log-primary: var(--color-red);
-		--log-state: var(--color-red);
+		--log-status: var(--color-red);
 		--log-border: var(--color-red);
 	}
-	&[data-state="build"] {
+	&[data-status="build"] {
 		--log-primary: var(--color-blue);
-		--log-state: var(--color-blue);
+		--log-status: var(--color-blue);
 		--log-border: var(--color-blue);
 	}
 
@@ -160,10 +165,10 @@ body {
 		margin-block: 0;
 	}
 
-	.log-state {
+	.log-status {
 		grid-area: Status;
-		background: var(--log-state, var(--color-subwhite));
-		color: var(--color-background);
+		background: var(--log-status, var(--color-subwhite));
+		color: var(--color-background-dark);
 		border-radius: .5rem;
 		padding-inline: .45em;
 		font-size: 85%;
@@ -172,6 +177,7 @@ body {
 	.log-time {
 		grid-area: Time;
 		font-style: italic;
+		opacity: .75;
 
 		&::first-letter {
 			text-transform: uppercase;
@@ -226,7 +232,9 @@ body {
 
 	.log-details-name {
 		margin-block: 0;
-		color: var(--color-text);
+		align-self: flex-start;
+		color: var(--log-primary);
+		text-align: center;
 	}
 
 	.log-details-code {

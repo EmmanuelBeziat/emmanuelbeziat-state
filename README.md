@@ -29,8 +29,9 @@ npm i
 ```env
 PORT=3000
 HOST="127.0.0.1"
-PATH_LOGS="/var/logs/mywebsite"
-NAME_LOGS="mywebsite.log"
+LOGS_PATH="/var/logs/mywebsite"
+FILE_LOG="mywebsite.log"
+FILE_STATUS="status.log"
 ```
 
 

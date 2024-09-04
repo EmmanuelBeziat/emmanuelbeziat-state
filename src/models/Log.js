@@ -4,8 +4,9 @@ import State from '../classes/State.js'
 
 class Log {
 	constructor () {
-		this.path = process.env.PATH_LOGS
-		this.fileName = process.env.NAME_LOGS
+		this.path = process.env.LOGS_PATH
+		this.logFile = process.env.FILE_LOG
+		this.statusFile = process.env.FILE_STATUS
 		this.state = new State().service
 	}
 
@@ -47,19 +48,15 @@ class Log {
 	 */
 	async getLogsFromFolders (folders) {
 		const logs = await Promise.all(folders.map(async folder =>{
-			const logFilePath = path.join(folder, this.fileName)
+			const logFilePath = path.join(folder, this.logFile)
 
 			return this.getLogContent(logFilePath)
 				.then(async content => {
 					if (!content) return null
 
 					const date = await this.getLogLastEdit(logFilePath)
-					return {
-						name: folder,
-						state: this.state.machine.current,
-						date,
-						content
-					}
+					const status = await this.stateChange(folder)
+					return { name: folder, status, date, content }
 				})
 				.catch(() => null) // Skip if folder is empty
 		}))
@@ -82,6 +79,11 @@ class Log {
 		}
 	}
 
+	/**
+	 * Retrieves the last modification date of a log file
+	 * @param {string} filename Name of the file to check
+	 * @returns {Promise<Date>} A promise that resolves with the last modification date of the file
+	 */
 	async getLogLastEdit (filename) {
 		try {
 			const data = await fs.stat(path.resolve(this.path, filename))
@@ -92,9 +94,21 @@ class Log {
 		}
 	}
 
-	stateChange (name, state) {
-		console.log(name, state)
-		this.state.send(state)
+	/**
+	 * Reads the content of the status.log file and removes any empty space or end lines.
+	 * @param {string} name The name of the folder (not used in this context).
+	 * @param {string} state The current state (not used in this context).
+	 * @returns {Promise<string>} A promise that resolves with the trimmed content of the status.log file.
+	 */
+	async stateChange (folder) {
+		const statusLogPath = path.join(folder, this.statusFile)
+		try {
+			const content = await this.getLogContent(statusLogPath)
+			return content.trim()
+		}
+		catch (error) {
+			throw new Error(error.message || 'Unable to read status.log')
+		}
 	}
 }
 
