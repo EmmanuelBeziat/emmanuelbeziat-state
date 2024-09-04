@@ -2,7 +2,7 @@
   "name": "emmanuelbeziat-state",
   "version": "1.0.3",
   "description": "🔔 Get some build logs out without needing to connect to my server",
-  "main": "src/index.js",
+  "main": "src/index.cjs",
   "author": {
     "name": "Emmanuel Béziat",
     "email": "contact@emmanuelbeziat.com"
@@ -36,6 +36,7 @@
     "@fastify/cors": "^9.0.1",
     "@fastify/static": "^7.0.4",
     "@fastify/view": "^9.1.0",
+    "@fastify/websocket": "^10.0.1",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
     "fastify": "^4.28.1",

@@ -24,7 +24,14 @@ export class Router {
 	 */
 	routes(app) {
 		app.get(this.apiURL, this.handleHomeRequest.bind(this))
-		app.get(`${this.apiURL}log/:name/:state`, this.routeOptions, this.handleLogRequest.bind(this))
+		// app.get(`${this.apiURL}log/:name/:state`, this.routeOptions, this.handleLogRequest.bind(this))
+		app.get(`${this.apiURL}hello-ws`, { websocket: true }, (connection, req) => {
+			console.log('test url')
+			connection.socket.on('message', message => {
+				console.log('test message')
+				connection.socket.send('Hello Fastify websockets: %', message)
+			})
+		})
 	}
 
 	/**
