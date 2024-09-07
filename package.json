@@ -29,8 +29,11 @@
     "prod": "nodemon -r dotenv/config src/index.js",
     "deploy": "pm2 start src/index.js --name 'emmanuelb-state' --node-args='-r dotenv/config' || pm2 reload emmanuelb-state --update-env",
     "test": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js",
-    "test:routes": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Routes.test.js",
-    "test:env": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Environment.test.js"
+    "test:env": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Environment.test.js",
+    "test:class:home": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Home.test.js",
+    "test:class:log": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Log.test.js",
+    "test:filters": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Filters.test.js",
+    "test:templates": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Templates.test.js"
   },
   "dependencies": {
     "@fastify/cors": "^9.0.1",
