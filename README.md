@@ -74,6 +74,29 @@ SERVICES_LIST=[{ "name": "<app_name>", "url": "<app_url>"}]
   ```
 	Checks the environment configurations to ensure all necessary variables are set correctly.
 
+- **Run class tests:**
+  ```bash
+  npm run test:class:home
+  ```
+  Runs tests for the Home class.
+
+  ```bash
+  npm run test:class:log
+  ```
+  Runs tests for the Log class.
+
+- **Run filter tests:**
+  ```bash
+  npm run test:filters
+  ```
+  Runs tests for filters.
+
+- **Run template tests:**
+  ```bash
+  npm run test:templates
+  ```
+  Runs tests for templates.
+
 ## License
 
 This project is licensed under the GPL-3.0-or-later License.

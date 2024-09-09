@@ -20,4 +20,8 @@ describe('Environment Variables', () => {
 	it('should have FILE_STATUS path defined', () => {
 		expect(process.env.FILE_STATUS).toBeDefined()
 	})
+
+	it('should have SERVICES_LIST path defined', () => {
+		expect(process.env.SERVICES_LIST).toBeDefined()
+	})
 })
