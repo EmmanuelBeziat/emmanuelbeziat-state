@@ -283,3 +283,23 @@ body {
 	}
 }
 
+.services-list {
+	margin-bottom: var(--gutter-screen);
+	display: flex;
+	flex-direction: column;
+	gap: .5rem;
+
+	.service {
+		&:is([data-status="online"]) {
+			--color-primary: var(--color-green);
+		}
+		&:is([data-status="offline"]) {
+			--color-primary: var(--color-red);
+		}
+
+		.status {
+			color: var(--color-primary);
+			font-weight: 600;
+		}
+	}
+}

@@ -1,6 +1,16 @@
 {% extends "layout/index.njk" %}
 
 {% block main %}
+<section class="services-list" id="service-status-list">
+	{% if services and services.length %}
+		{% for service in services %}
+			{% include "partials/service.njk" %}
+		{% endfor %}
+	{% else %}
+		<p>No services</p>
+	{% endif %}
+</section>
+
 <section class="logs-list">
 	{% if logs and logs.length %}
 		{% for log in logs | sortByDate %}

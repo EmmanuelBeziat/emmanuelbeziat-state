@@ -42,6 +42,7 @@ class Server {
 					env.addFilter('formatDate', formatDate)
 					env.addFilter('formatDateRelative', formatDateRelative)
 					env.addFilter('sortByDate', sortByDate)
+					env.addFilter('log', value => { console.log(value) })
 				}
 			}
 		})

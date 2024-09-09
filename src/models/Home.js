@@ -1,6 +1,6 @@
 class Home {
-	render (reply, logs) {
-		reply.code(200).view('../views/logs.njk', { logs })
+	render (reply, data) {
+		reply.code(200).view('../views/logs.njk', { logs: data.logs, services: data.servicesUrl })
 	}
 }
 
