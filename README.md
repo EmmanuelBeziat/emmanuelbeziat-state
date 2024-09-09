@@ -32,6 +32,7 @@ HOST="127.0.0.1"
 LOGS_PATH="/var/logs/mywebsite"
 FILE_LOG="mywebsite.log"
 FILE_STATUS="status.log"
+SERVICES_LIST=[{ "name": "<app_name>", "url": "<app_url>"}]
 ```
 
 
