@@ -8,14 +8,6 @@ export class Router {
 		this.apiURL = '/'
 		this.home = new HomeController()
 		this.log = new LogController()
-
-		this.routeOptions = {
-			schema: {
-				querystring: {
-					code: { type: 'string' },
-				}
-			}
-		}
 	}
 
 	/**
@@ -24,7 +16,6 @@ export class Router {
 	 */
 	routes(app) {
 		app.get(this.apiURL, this.handleHomeRequest.bind(this))
-		app.get(`${this.apiURL}log/:name/:state`, this.routeOptions, this.handleLogRequest.bind(this))
 	}
 
 	/**
@@ -36,17 +27,5 @@ export class Router {
 		this.log.list(req, reply)
 			.then(data => { this.home.index(req, reply, data) })
 			.catch (error => { reply.status(500).send(error) })
-	}
-
-	/**
-	 * Handles log route request
-	 * @param {Object} req The request object
-	 * @param {Object} reply The reply object
-	 */
-	handleLogRequest (req, reply) {
-		this.log.state(req, reply)
-
-		const isBrowser = req.headers['user-agent'] && req.headers['user-agent'].includes('Mozilla')
-		if (isBrowser) return reply.status(403).send('Access forbidden')
 	}
 }

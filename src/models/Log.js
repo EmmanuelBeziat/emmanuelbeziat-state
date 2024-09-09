@@ -1,13 +1,11 @@
 import fs from 'fs/promises'
 import path from 'path'
-import State from '../classes/State.js'
 
 class Log {
 	constructor () {
 		this.path = process.env.LOGS_PATH
 		this.logFile = process.env.FILE_LOG
 		this.statusFile = process.env.FILE_STATUS
-		this.state = new State().service
 	}
 
 	/**
