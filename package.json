@@ -24,6 +24,7 @@
   "homepage": "https://github.com/EmmanuelBeziat/emmanuelbeziat-state#readme",
   "type": "module",
   "scripts": {
+    "setup": "node setup.js",
     "start": "npm run dev",
     "dev": "node --watch -r dotenv/config src/index.js",
     "prod": "nodemon -r dotenv/config src/index.js",
@@ -51,6 +52,7 @@
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
     "cross-env": "^7.0.3",
+    "inquirer": "^10.2.2",
     "jest": "^29.7.0",
     "supertest": "^7.0.0"
   }
