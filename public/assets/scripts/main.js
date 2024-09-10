@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			serviceStatus.forEach(service => {
 				const listItem = document.querySelector(`[data-url="${service.url}"] .status`)
 				if (!listItem) return
-				listItem.textContent = service.online ? 'Online' : 'Offline'
+				listItem.innerHTML = service.online ? '✅' : '❌'
 				listItem.parentElement.dataset.status = service.online ? 'online' : 'offline';
 			})
 		})

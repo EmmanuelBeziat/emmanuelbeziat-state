@@ -91,6 +91,10 @@ body {
 	.header {
 		grid-area: Header;
 		padding: calc(var(--gutter-screen) / 2) var(--gutter-screen);
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+		justify-content: space-between;
 
 		.header-title {
 			margin: 0;
@@ -284,12 +288,21 @@ body {
 }
 
 .services-list {
-	margin-bottom: var(--gutter-screen);
 	display: flex;
 	flex-direction: column;
 	gap: .5rem;
 
 	.service {
+		padding: .35rem .65rem;
+		border-radius: .25rem;
+		background: var(--log-bg, var(--color-background-light));
+		color: var(--log-color, var(--color-text));
+		font-size: .85rem;
+		border: 1px solid var(--log-border, var(--color-background-lighter));
+		display: flex;
+		align-items: center;
+		gap: .5rem;
+
 		&:is([data-status="online"]) {
 			--color-primary: var(--color-green);
 		}
