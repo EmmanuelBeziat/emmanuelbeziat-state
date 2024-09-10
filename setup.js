@@ -9,6 +9,11 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 async function createEnvFile() {
+	if (fs.existsSync(envPath)) {
+    console.log('.env file already exists. Skipping creation.')
+    return
+  }
+
   const examplePath = path.join(__dirname, '.env.example')
   const exampleContent = fs.readFileSync(examplePath, 'utf8')
 
