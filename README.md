@@ -10,7 +10,6 @@
 - Fetch build logs
 - Environment configuration using dotenv
 
-
 ## Installation
 
 ```bash
@@ -34,7 +33,6 @@ FILE_LOG="mywebsite.log"
 FILE_STATUS="status.log"
 SERVICES_LIST=[{ "name": "<app_name>", "url": "<app_url>"}]
 ```
-
 
 ## Usage
 
