@@ -297,9 +297,10 @@ body {
 		background: var(--log-bg, var(--color-background-light));
 		color: var(--log-color, var(--color-text));
 		font-size: .85rem;
-		border: 1px solid var(--log-border, var(--color-background-lighter));
+		border: 1px solid var(--color-primary, var(--color-background-lighter));
 		display: flex;
 		align-items: center;
+		transition: border-color .25s ease-in-out;
 		gap: .5rem;
 
 		&:is([data-status="online"]) {
