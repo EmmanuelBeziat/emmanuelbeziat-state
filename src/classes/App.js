@@ -1,27 +1,14 @@
 import fastify from 'fastify'
 import { Router } from '../routes/Routes.js'
-import basicAuth from '@fastify/basic-auth'
+import { Auth } from './Auth.js'
 
 class App {
 	constructor () {
 		this.app = fastify()
-		this.setupAuth()
-		this.router = new Router()
+		this.auth = new Auth(this.app)
+		this.router = new Router(this.auth)
 		this.router.routes(this.app)
 	}
-
-	setupAuth () {
-    const validate = async (username, password, req, reply) => {
-      if (username !== process.env.AUTH_USERNAME || password !== process.env.AUTH_PASSWORD) {
-        return new Error('Invalid username or password')
-      }
-    }
-
-    this.app.register(basicAuth, {
-      validate,
-      authenticate: { realm: 'Emmanuel Béziat Logs' }
-    })
-  }
 }
 
 export default new App().app

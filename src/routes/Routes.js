@@ -4,11 +4,12 @@ import { HomeController, LogController, ServiceController } from '../controllers
  * Defines application routes and their corresponding controllers.
  */
 export class Router {
-	constructor () {
+	constructor (auth) {
 		this.apiURL = '/'
 		this.home = new HomeController()
 		this.log = new LogController()
 		this.service = new ServiceController()
+		this.auth = auth
 	}
 
 	/**
@@ -17,15 +18,7 @@ export class Router {
 	 */
 	routes (app) {
 		// Apply authentication to all routes
-    app.addHook('onRequest', (request, reply, done) => {
-			if (request.url.startsWith('/assets/')) {
-        // Skip authentication for static assets
-        done()
-      }
-			else {
-        app.basicAuth(request, reply, done)
-      }
-		})
+    app.addHook('onRequest', this.auth.applyAuth.bind(this.auth))
 
 		app.get(this.apiURL, this.handleHomeRequest.bind(this))
 		app.get('/api/service-statuses', this.getServiceStatuses.bind(this))
