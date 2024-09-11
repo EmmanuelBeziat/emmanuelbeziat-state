@@ -32,6 +32,8 @@ LOGS_PATH="/var/logs/mywebsite"
 FILE_LOG="mywebsite.log"
 FILE_STATUS="status.log"
 SERVICES_LIST=[{ "name": "<app_name>", "url": "<app_url>"}]
+AUTH_USERNAME=<your_username>
+AUTH_PASSWORD=<your_password>
 ```
 
 ## Usage

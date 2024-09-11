@@ -2,10 +2,11 @@ import App from './classes/App.js'
 import cors from '@fastify/cors'
 import view from '@fastify/view'
 import fstatic from '@fastify/static'
+import basicAuth from '@fastify/basic-auth'
 import favicons from 'fastify-favicon'
 import path from 'path'
-import { fileURLToPath } from 'url'
 import nunjucks from 'nunjucks'
+import { fileURLToPath } from 'url'
 import { formatDate, formatDateRelative, sortByDate } from './utils/filters.js'
 
 /**

@@ -16,6 +16,17 @@ export class Router {
 	 * @param {Object} app The fastify application instance
 	 */
 	routes (app) {
+		// Apply authentication to all routes
+    app.addHook('onRequest', (request, reply, done) => {
+			if (request.url.startsWith('/assets/')) {
+        // Skip authentication for static assets
+        done()
+      }
+			else {
+        app.basicAuth(request, reply, done)
+      }
+		})
+
 		app.get(this.apiURL, this.handleHomeRequest.bind(this))
 		app.get('/api/service-statuses', this.getServiceStatuses.bind(this))
 	}
