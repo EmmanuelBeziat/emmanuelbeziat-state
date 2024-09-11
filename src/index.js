@@ -2,7 +2,6 @@ import App from './classes/App.js'
 import cors from '@fastify/cors'
 import view from '@fastify/view'
 import fstatic from '@fastify/static'
-import basicAuth from '@fastify/basic-auth'
 import favicons from 'fastify-favicon'
 import path from 'path'
 import nunjucks from 'nunjucks'
@@ -22,18 +21,10 @@ class Server {
 
 	setupPlugins () {
 		this.app.register(cors, {
-			origin: (origin, cb) => {
-				const allowedOrigins = [/localhost/]
-				const isAllowed = allowedOrigins.some(pattern => typeof pattern === 'string' ? pattern === origin : pattern.test(origin))
-
-				if (isAllowed || !origin) {
-					cb(null, true)
-				}
-				else {
-					cb(new Error('Not allowed'))
-				}
-			}
-		})
+      origin: true,
+      credentials: true
+    })
+		this.app.register(import('@fastify/formbody'))
 
 		this.app.register(view, {
 			engine: { nunjucks },

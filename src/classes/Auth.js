@@ -13,7 +13,7 @@ export class Auth {
 		this.app = app
 
 		this.realm = 'Emmanuel Béziat Logs'
-    this.publicPaths = ['/assets/']
+    this.publicPaths = ['/assets/', '/login']
 		this.setup()
 	}
 
@@ -25,6 +25,9 @@ export class Auth {
       validate: this.validateCredentials,
       authenticate: { realm: this.realm }
     })
+
+		this.setupLoginRoute()
+		this.setupLogoutRoute()
 	}
 
 	/**
@@ -63,6 +66,44 @@ export class Auth {
    */
   isPublicPath (path) {
     return this.publicPaths.some(publicPath => path.startsWith(publicPath))
+  }
+
+	/**
+   * Sets up the login routes for both GET and POST requests.
+   * GET /login: Renders the login form.
+   * POST /login: Handles the login form submission.
+   */
+	setupLoginRoute () {
+		this.app.get('/login', (request, reply) => {
+			reply.view('login.njk', { error: request.query.error })
+		})
+
+		this.app.post('/login', async (request, reply) => {
+			const { username, password } = request.body
+
+			try {
+				await this.validateCredentials(username, password)
+				reply.setCookie('auth', 'true', {
+					path: '/',
+					httpOnly: true,
+					secure: process.env.NODE_ENV === 'production',
+					sameSite: 'strict'
+				}).redirect('/')
+			}
+			catch (error) {
+				reply.redirect(`/login?error=${encodeURIComponent(error.message)}`)
+			}
+		})
+	}
+
+	/**
+   * Sets up the logout route.
+   * GET /logout: Handles user logout by clearing the authentication cookie.
+   */
+	setupLogoutRoute () {
+    this.app.get('/logout', (request, reply) => {
+      reply.clearCookie('auth', { path: '/' }).redirect('/login')
+    })
   }
 }
 

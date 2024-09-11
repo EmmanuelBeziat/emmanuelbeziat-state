@@ -18,7 +18,14 @@ export class Router {
 	 */
 	routes (app) {
 		// Apply authentication to all routes
-    app.addHook('onRequest', this.auth.applyAuth.bind(this.auth))
+    app.addHook('onRequest', (request, reply, done) => {
+			if (this.auth.isPublicPath(request.url) || request.cookies.auth === 'true') {
+				done()
+			}
+			else {
+				reply.redirect('/login')
+			}
+		})
 
 		app.get(this.apiURL, this.handleHomeRequest.bind(this))
 		app.get('/api/service-statuses', this.getServiceStatuses.bind(this))
@@ -33,7 +40,12 @@ export class Router {
 		this.log.list(req, reply)
 			.then(logs => {
 				const servicesUrl = this.service.getServiceUrls()
-				this.home.index(req, reply, { logs, servicesUrl, servicesStatus: [] })
+				this.home.index(req, reply, {
+					logs,
+					servicesUrl,
+					servicesStatus: [],
+					request: req
+				 })
 			})
 			.catch (error => { reply.status(500).send(error) })
 	}

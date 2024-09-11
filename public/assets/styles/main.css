@@ -316,3 +316,68 @@ body {
 		}
 	}
 }
+
+.login-form {
+  max-width: 25rem;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--color-background-light);
+  border: 1px solid var(--color-background-lighter);
+  border-radius: 0.25rem;
+  color: var(--color-text);
+
+  h2 {
+    margin-block: 0 1.5rem;
+    color: var(--color-green);
+    font-size: var(--font-size-heading-4);
+    text-align: center;
+  }
+
+  :is(div, .error) {
+    margin-bottom: 1rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--color-subwhite);
+  }
+
+  :where(input, button) {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    font-family: var(--font-stack-common);
+    font-size: var(--font-size-base);
+  }
+
+  input {
+    background: var(--color-background);
+    border: 1px solid var(--color-background-lighter);
+    color: var(--color-text);
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-blue);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-blue) 30%, transparent);
+    }
+  }
+
+  button {
+    padding-block: 0.75rem;
+    background: var(--color-blue);
+    border: none;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background-color 0.25s ease-in-out;
+
+    &:is(:hover, :focus) {
+      background-color: color-mix(in srgb, var(--color-blue) 80%, white);
+    }
+  }
+
+  .error {
+    color: var(--color-red);
+    text-align: center;
+  }
+}

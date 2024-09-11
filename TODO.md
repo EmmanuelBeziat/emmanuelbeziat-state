@@ -1,3 +1,3 @@
 ## TODO
 
-* Add auth
+* [x] Add auth
