@@ -352,15 +352,26 @@ body {
   }
 
   input {
+		--input-color: var(--color-text);
+		--input-border: var(--color-background-lighter);
     background: var(--color-background);
-    border: 1px solid var(--color-background-lighter);
-    color: var(--color-text);
+    border: 1px solid var(--input-border);
+    color: var(--input-color);
 
     &:focus-visible {
       outline: none;
-      border-color: var(--color-blue);
-      box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-blue) 30%, transparent);
+      --input-border: var(--color-blue);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-text) 30%, transparent);
     }
+
+		&:user-invalid {
+			--input-color: var(--color-red);
+			--input-border: var(--color-red);
+		}
+
+		&:user-valid {
+			--input-color: var(--color-blue);
+		}
   }
 
   .button {
@@ -371,13 +382,23 @@ body {
     transition: background-color .25s ease-in-out;
 
     &:is(:hover, :focus) {
-      background-color: color-mix(in srgb, var(--color-blue) 80%, white);
+      background-color: color-mix(in srgb, var(--color-blue) 80%, black);
     }
   }
 
   .error {
     color: var(--color-red);
-    text-align: center;
 		margin-bottom: 1rem;
   }
+
+	input:-webkit-autofill,
+	input:-webkit-autofill:hover,
+	input:-webkit-autofill:focus,
+	input:-webkit-autofill:focus-visible,
+	input:-webkit-autofill:active {
+		font-size: 1rem;
+		transition: background-color 5000s ease-in-out 0s;
+		-webkit-text-fill-color: var(--input-color) !important;
+		caret-color: var(--input-color);
+	}
 }

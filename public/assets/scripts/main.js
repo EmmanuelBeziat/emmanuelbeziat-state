@@ -12,14 +12,8 @@ const modalHandler = log => {
 	})
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-	// Modales
-	document.querySelectorAll('.log').forEach(log => { modalHandler(log) })
-
-	// Code highligting
-	hljs.highlightAll()
-
-	fetch('/api/service-statuses')
+const getStatus = url => {
+	fetch(url)
 		.then(response => {
 			if (!response.ok) {
 				throw new Error('Network response was not ok')
@@ -40,4 +34,16 @@ document.addEventListener('DOMContentLoaded', () => {
 		.catch(error => {
 			console.error('Error fetching service statuses:', error)
 		})
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+	// Modales
+	document.querySelectorAll('.log').forEach(log => { modalHandler(log) })
+
+	// Code highligting
+	hljs.highlightAll()
+
+	if (document.querySelector('.services-list')) {
+		getStatus('/api/service-statuses')
+	}
 })

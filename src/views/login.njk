@@ -4,12 +4,12 @@
 <div class="login-form">
   <h2>Login</h2>
   {% if error %}
-    <p class="error">{{ error }}</p>
+    <div class="error">{{ error }}</div>
   {% endif %}
 
   <form action="/login" method="post" class="form">
-		<input type="text" id="username" name="username" aria-label="Username" placeholder="MyName" required>
-		<input type="password" id="password" name="password" aria-label="Password" placeholder="MyPassword" required>
+		<input type="text" id="username" name="username" aria-label="Username" placeholder="MyName" minlength="5" required>
+		<input type="password" id="password" name="password" aria-label="Password" placeholder="MyPassword" minlength="5" required>
 		<button type="submit" class="button">Login</button>
   </form>
 </div>
