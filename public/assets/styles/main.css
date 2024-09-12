@@ -22,7 +22,9 @@
 	--font-size-heading-5: 1.563rem;
 	--font-size-heading-6: 1.25rem;
 	--ease-back-out: cubic-bezier(.295, 1.75, .69, .9);
+
 	--gutter-screen: 2rem;
+	--gutter-screen-mid: calc(var(--gutter-screen) / 2);
 
 	--container-width: 25rem;
 
@@ -90,7 +92,7 @@ body {
 
 	.header {
 		grid-area: Header;
-		padding: calc(var(--gutter-screen) / 2) var(--gutter-screen);
+		padding: var(--gutter-screen-mid) var(--gutter-screen);
 		display: flex;
 		gap: 1rem;
 		align-items: center;
@@ -118,7 +120,7 @@ body {
 
 	.footer {
 		grid-area: Footer;
-		padding: calc(var(--gutter-screen) / 2) var(--gutter-screen);
+		padding: var(--gutter-screen-mid) var(--gutter-screen);
 		text-align: center;
 	}
 }
@@ -163,7 +165,7 @@ body {
 	}
 
 	.log-header {
-		padding: calc(var(--gutter-screen) / 2);
+		padding: var(--gutter-screen-mid);
 		display: grid;
 		grid-template-columns: 1fr auto;
 		grid-template-rows: repeat(2, auto);
@@ -318,12 +320,10 @@ body {
 }
 
 .login-form {
-  max-width: 25rem;
-  margin: 2rem auto;
-  padding: 2rem;
+  padding: var(--gutter-screen-mid);
   background: var(--color-background-light);
   border: 1px solid var(--color-background-lighter);
-  border-radius: 0.25rem;
+  border-radius: .25rem;
   color: var(--color-text);
 
   h2 {
@@ -333,22 +333,22 @@ body {
     text-align: center;
   }
 
-  :is(div, .error) {
-    margin-bottom: 1rem;
-  }
+	.form {
+		display: flex;
+		flex-direction: column;
+		gap: var(--gutter-screen-mid);
+	}
 
   label {
-    display: block;
-    margin-bottom: 0.5rem;
     color: var(--color-subwhite);
   }
 
   :where(input, button) {
-    width: 100%;
-    padding: 0.5rem;
-    border-radius: 0.25rem;
+    padding: calc(var(--gutter-screen-mid) / 2) var(--gutter-screen-mid);
+    border-radius: .25rem;
     font-family: var(--font-stack-common);
     font-size: var(--font-size-base);
+		flex: 1;
   }
 
   input {
@@ -356,20 +356,19 @@ body {
     border: 1px solid var(--color-background-lighter);
     color: var(--color-text);
 
-    &:focus {
+    &:focus-visible {
       outline: none;
       border-color: var(--color-blue);
       box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-blue) 30%, transparent);
     }
   }
 
-  button {
-    padding-block: 0.75rem;
+  .button {
     background: var(--color-blue);
     border: none;
     color: var(--color-text);
     cursor: pointer;
-    transition: background-color 0.25s ease-in-out;
+    transition: background-color .25s ease-in-out;
 
     &:is(:hover, :focus) {
       background-color: color-mix(in srgb, var(--color-blue) 80%, white);
@@ -379,5 +378,6 @@ body {
   .error {
     color: var(--color-red);
     text-align: center;
+		margin-bottom: 1rem;
   }
 }
