@@ -3,6 +3,10 @@ class Service {
 		this.servicesList = JSON.parse(process.env.SERVICES_LIST)
 	}
 
+	/**
+	 * Checks the status of all services.
+	 * @returns {Promise<Array>} A promise that resolves to an array of service statuses
+	 */
 	async checkAllServices () {
 		const checkService = async service => {
 			try {

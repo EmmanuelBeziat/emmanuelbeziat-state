@@ -4,64 +4,72 @@ import view from '@fastify/view'
 import fstatic from '@fastify/static'
 import favicons from 'fastify-favicon'
 import path from 'path'
-import nunjucks from 'nunjucks'
 import { fileURLToPath } from 'url'
-import { formatDate, formatDateRelative, sortByDate } from './utils/filters.js'
+import { config, nunjucksFilters } from './config/index.js'
 
 /**
- * Initializes the server with necessary plugins and configurations.
+ * Initializes the server with necessary plugins and configurations
  */
 class Server {
-	constructor () {
-		this.app = App
-		this.dirname = path.dirname(fileURLToPath(import.meta.url))
+  constructor () {
+    this.app = App
+    this.dirname = path.dirname(fileURLToPath(import.meta.url))
 
-		this.setupPlugins()
-	}
+    this.setupPlugins()
+  }
 
-	setupPlugins () {
-		this.app.register(cors, {
-      origin: true,
-      credentials: true
+  setupPlugins () {
+    this.setupCors()
+    this.setupFormBody()
+    this.setupViewEngine()
+    this.setupStaticFiles()
+    this.setupFavicons()
+  }
+
+  setupCors () {
+    this.app.register(cors, config.cors)
+  }
+
+  setupFormBody () {
+    this.app.register(import('@fastify/formbody'))
+  }
+
+  setupViewEngine () {
+    this.app.register(view, {
+      engine: { nunjucks: config.viewEngine },
+      root: config.paths.views,
+      options: {
+        onConfigure: nunjucksFilters
+      }
     })
-		this.app.register(import('@fastify/formbody'))
+  }
 
-		this.app.register(view, {
-			engine: { nunjucks },
-			root: './src/views',
-			options: {
-				onConfigure: env => {
-					env.addFilter('formatDate', formatDate)
-					env.addFilter('formatDateRelative', formatDateRelative)
-					env.addFilter('sortByDate', sortByDate)
-					env.addFilter('log', value => { console.log(value) })
-				}
-			}
-		})
+  setupStaticFiles () {
+    this.app.register(fstatic, {
+      root: config.paths.public
+    })
+  }
 
-		this.app.register(fstatic, {
-			root: path.join(this.dirname, '../public')
-		})
+  setupFavicons () {
+    this.app.register(favicons, {
+      path: config.paths.favicons,
+      name: 'favicon.ico'
+    })
+  }
 
-		this.app.register(favicons, {
-			path: './public/favicons',
-			name: 'favicon.ico'
-		})
-	}
-
-	/**
-	 * Starts the server on the specified host and port
-	 */
-	start () {
-		this.app.listen({ port: process.env.PORT || 3000, host: process.env.HOST || '127.0.0.1' })
-			.then(address => {
-				console.log(`Server started on ${address}`)
-			})
-			.catch(error => {
-				console.log(`Error starting server: ${error}`)
-				process.exit(1)
-			})
-	}
+  /**
+   * Starts the server on the specified host and port
+   */
+  async start () {
+    try {
+      const address = await this.app.listen({ port: config.port, host: config.host })
+      console.log(`Server started on ${address}`)
+    }
+		catch (error) {
+      console.error(`Error starting server: ${error}`)
+      process.exit(1)
+    }
+  }
 }
 
 const server = new Server()

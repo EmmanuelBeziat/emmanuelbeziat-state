@@ -5,7 +5,7 @@ export class HomeController {
 		this.model = new Home()
 	}
 
-	index (request, reply, data) {
-		this.model.render(reply, data)
+	async index (request, reply, data) {
+		await this.model.render(reply, data)
 	}
 }
