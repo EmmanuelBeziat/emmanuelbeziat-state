@@ -75,7 +75,6 @@ export class Router {
       reply.send(serviceStatus)
     }
 		catch (error) {
-      console.error('Error fetching service statuses:', error)
       this.handleError(reply, error, 'Unable to get services')
     }
   }
@@ -86,7 +85,6 @@ export class Router {
    * @param {Object} reply The reply object
    */
   NotFoundHandler(request, reply) {
-		console.log('NotFoundHandler - before view:', reply)
     reply.code(404).view('404.njk')
   }
 
