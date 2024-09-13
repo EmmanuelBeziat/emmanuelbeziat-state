@@ -27,24 +27,26 @@ export class Router {
 			}
 		})
 
+		app.setNotFoundHandler(this.NotFoundHandler.bind(this))
+
 		app.get(this.apiURL, this.handleHomeRequest.bind(this))
 		app.get('/api/service-statuses', this.getServiceStatuses.bind(this))
 	}
 
 	/**
 	 * Handles home routes request
-	 * @param {Object} req The request object
+	 * @param {Object} request The request object
 	 * @param {Object} reply The reply object
 	 */
-	handleHomeRequest (req, reply) {
-		this.log.list(req, reply)
+	handleHomeRequest (request, reply) {
+		this.log.list(request, reply)
 			.then(logs => {
 				const servicesUrl = this.service.getServiceUrls()
-				this.home.index(req, reply, {
+				this.home.index(request, reply, {
 					logs,
 					servicesUrl,
 					servicesStatus: [],
-					request: req
+					request
 				 })
 			})
 			.catch (error => { reply.status(500).send(error) })
@@ -52,10 +54,10 @@ export class Router {
 
 	/**
 	 * Fetches service statuses
-	 * @param {Object} req The request object
+	 * @param {Object} request The request object
 	 * @param {Object} reply The reply object
 	 */
-	getServiceStatuses (req, reply) {
+	getServiceStatuses (request, reply) {
 		this.service.checkServices()
 			.then(serviceStatus => {
 				reply.send(serviceStatus)
@@ -64,5 +66,9 @@ export class Router {
 				console.error('Error fetching service statuses:', error)
 				reply.status(500).send({ error: error.message || 'Unable to get services' })
 			})
+	}
+
+	NotFoundHandler (request, reply) {
+    reply.code(404).view('../views/404.njk')
 	}
 }

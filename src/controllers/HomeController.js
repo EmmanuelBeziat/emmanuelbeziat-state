@@ -5,7 +5,7 @@ export class HomeController {
 		this.model = new Home()
 	}
 
-	index (req, reply, data) {
+	index (request, reply, data) {
 		this.model.render(reply, data)
 	}
 }

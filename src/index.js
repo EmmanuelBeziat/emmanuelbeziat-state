@@ -39,6 +39,7 @@ class Server {
 			}
 		})
 
+
 		this.app.register(fstatic, {
 			root: path.join(this.dirname, '../public')
 		})

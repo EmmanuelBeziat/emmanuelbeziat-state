@@ -5,7 +5,7 @@ export class ServiceController {
 		this.model = new Service()
 	}
 
-	checkServices (req, reply) {
+	checkServices (request, reply) {
 		return this.model.checkAllServices()
 			.then(data => {
 				return data
