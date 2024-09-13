@@ -1,5 +1,3 @@
-import App from '../src/classes/App.js'
-
 describe('Environment Variables', () => {
   it('should have PORT defined', () => {
     expect(process.env.PORT).toBeDefined()
@@ -23,5 +21,13 @@ describe('Environment Variables', () => {
 
 	it('should have SERVICES_LIST path defined', () => {
 		expect(process.env.SERVICES_LIST).toBeDefined()
+	})
+
+	it('should have AUTH_USERNAME credential defined', () => {
+		expect(process.env.AUTH_USERNAME).toBeDefined()
+	})
+
+	it('should have AUTH_PASSWORD credential defined', () => {
+		expect(process.env.AUTH_PASSWORD).toBeDefined()
 	})
 })

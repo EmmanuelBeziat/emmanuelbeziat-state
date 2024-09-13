@@ -1,6 +1,5 @@
 import Log from '../src/models/Log.js'
 import fs from 'fs/promises'
-import path from 'path'
 
 jest.mock('fs/promises')
 

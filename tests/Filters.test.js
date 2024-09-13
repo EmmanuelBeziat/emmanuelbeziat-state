@@ -1,6 +1,5 @@
 import { formatDate, formatDateRelative, sortByDate } from '../src/utils/filters.js'
 
-
 describe('sortByDate', () => {
 	test('sorts items by date in descending order', () => {
 		const items = [

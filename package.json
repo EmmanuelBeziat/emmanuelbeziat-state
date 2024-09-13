@@ -1,7 +1,7 @@
 {
   "name": "emmanuelbeziat-state",
-  "version": "1.3.0",
-  "description": "🔔 Get some build logs out without needing to connect to my server",
+  "version": "1.3.1",
+  "description": "🔔 Get some build logs out without needing to connect to my server",
   "main": "src/index.js",
   "author": {
     "name": "Emmanuel Béziat",
@@ -34,7 +34,8 @@
     "test:class:home": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Home.test.js",
     "test:class:log": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Log.test.js",
     "test:filters": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Filters.test.js",
-    "test:templates": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Templates.test.js"
+    "test:templates": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Templates.test.js",
+    "test:routes": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Routes.test.js"
   },
   "dependencies": {
     "@fastify/basic-auth": "^5.1.1",

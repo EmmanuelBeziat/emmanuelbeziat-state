@@ -1,6 +1,6 @@
 # ![Emmanuel Béziat Logo](public/favicons/favicon-32x32.png) emmanuelbeziat-state :: Emmanuel Béziat
 
-🔔 Get some build logs out without needing to connect to my server.
+🔔 Get some build logs out without needing to connect to my server.
 
 ![Built with](https://img.shields.io/badge/built_with-fastify-blue.svg?style=flat) ![Built With](https://img.shields.io/badge/built_with-nunjucks-green.svg?style=flat
 )
