@@ -24,6 +24,6 @@ describe('Home Class', () => {
 		home.render(reply, { logs, services: serviceStatus })
 
 		expect(reply.code).toHaveBeenCalledWith(200)
-		expect(reply.view).toHaveBeenCalledWith('../views/logs.njk', { logs })
+		expect(reply.view).toHaveBeenCalledWith('logs.njk', { logs })
 	})
 })
