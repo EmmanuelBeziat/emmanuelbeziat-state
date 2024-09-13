@@ -1,6 +1,6 @@
 {
   "name": "emmanuelbeziat-state",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "🔔 Get some build logs out without needing to connect to my server",
   "main": "src/index.js",
   "author": {
@@ -31,6 +31,7 @@
     "deploy": "pm2 start src/index.js --name 'emmanuelb-state' --node-args='-r dotenv/config' || pm2 reload emmanuelb-state --update-env",
     "test": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js",
     "test:env": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Environment.test.js",
+    "test:class:auth": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Home.test.js",
     "test:class:home": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Home.test.js",
     "test:class:log": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Log.test.js",
     "test:filters": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Filters.test.js",
