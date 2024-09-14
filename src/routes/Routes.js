@@ -22,7 +22,7 @@ export class Router {
 	 */
 	routes (app) {
 		// Apply authentication to all routes
-    // app.addHook('onRequest', this.authenticateRequest.bind(this))
+    app.addHook('onRequest', this.authenticateRequest.bind(this))
 
 		// Handle not found error
 		app.setNotFoundHandler(this.NotFoundHandler)
