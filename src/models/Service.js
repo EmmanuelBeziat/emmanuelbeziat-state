@@ -9,9 +9,12 @@ class Service {
 	 */
 	async checkAllServices () {
 		const checkService = async service => {
+			const startTime = performance.now()
 			try {
 				const response = await fetch(service.url, { method: 'HEAD' })
-				return { name: service.name, url: service.url, online: response.ok }
+				const endTime = performance.now()
+				const duration = endTime - startTime
+				return { name: service.name, url: service.url, online: response.ok, time: duration }
 			}
 			catch (error) {
 				return { name: service.name, url: service.url, online: false }

@@ -12,7 +12,9 @@ const modalHandler = log => {
 	})
 }
 
-const getStatus = url => {
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+const getStatus = async url => {
+	await delay(500)
 	fetch(url)
 		.then(response => {
 			if (!response.ok) {
@@ -25,10 +27,12 @@ const getStatus = url => {
 				throw new Error('Service status is not an array')
 			}
 			serviceStatus.forEach(service => {
-				const listItem = document.querySelector(`[data-url="${service.url}"] .status`)
+				const listItem = document.querySelector(`[data-url="${service.url}"]`)
+				const status = listItem.querySelector('.status')
 				if (!listItem) return
-				listItem.innerHTML = service.online ? '✅' : '❌'
-				listItem.parentElement.dataset.status = service.online ? 'online' : 'offline';
+				status.innerHTML = service.online ? '✅' : '❌'
+				listItem.dataset.status = service.online ? 'online' : 'offline';
+				listItem.dataset.time = `${service.time.toFixed(0)}ms`
 			})
 		})
 		.catch(error => {

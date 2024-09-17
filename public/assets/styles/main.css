@@ -27,6 +27,7 @@
 	--gutter-screen-mid: calc(var(--gutter-screen) / 2);
 
 	--container-width: 25rem;
+	--ease-back-out: cubic-bezier(.295, 1.750, .690, .900);
 
 	scroll-behavior: smooth;
 	scrollbar-gutter: stable;
@@ -52,7 +53,7 @@ body {
 	font: 400 var(--font-size-base)/1.25 var(--font-stack-common);
 	background: var(--color-background);
 	color: var(--color-text);
-	transition: filter .25s ease-in-out;
+	transition: filter .25s var(--ease-back-out);
 	filter: blur(0);
 
 	&:has(dialog[open]) {
@@ -61,7 +62,7 @@ body {
 
 	@starting-style {
 		filter: blur(0);
-		transition: filter .25s ease-in-out;
+		transition: filter .25s var(--ease-back-out);
 	}
 }
 
@@ -72,7 +73,7 @@ body {
 	border-radius: .25rem;
 	padding: .5em 1em;
 	color: var(--color-subwhite);
-	transition: .25s ease-in-out;
+	transition: .25s var(--ease-back-out);
 
 	/* &:hover,
 	&:focus-visible {
@@ -136,7 +137,7 @@ body {
 	background: var(--log-bg, var(--color-background-light));
 	color: var(--log-color, var(--color-text));
 	border: 1px solid var(--log-border, var(--color-background-lighter));
-	transition: .2s ease-in-out;
+	transition: .2s var(--ease-back-out);
 
 	&:hover,
 	&:focus-visible {
@@ -212,7 +213,7 @@ body {
 		flex-direction: column;
 		gap: .5rem;
 
-		transition: .25s ease-in-out;
+		transition: .25s var(--ease-back-out);
 		transition-behavior: allow-discrete;
 		transform: translateY(-1rem);
 
@@ -242,7 +243,7 @@ body {
 			opacity: .75;
 			filter: blur(2px);
 			background: color-mix(in oklab, var(--log-primary), var(--color-background-dark) 95%);
-			transition: .25s ease-in-out;
+			transition: .25s var(--ease-back-out);
 			transition-behavior: allow-discrete;
 		}
 	}
@@ -273,7 +274,7 @@ body {
 		&::-webkit-scrollbar-thumb {
 			border: 4px solid var(--color-background-light);
 			border-radius: .5rem;
-			transition: .25s ease-in-out;
+			transition: .25s var(--ease-back-out);
 			background: var(--log-primary);
 		}
 
@@ -301,8 +302,9 @@ body {
 		font-size: .85rem;
 		border: 1px solid var(--color-primary, var(--color-background-lighter));
 		display: flex;
+		position: relative;
 		align-items: center;
-		transition: border-color .25s ease-in-out;
+		transition: border-color .25s var(--ease-back-out);
 		gap: .5rem;
 
 		&:is([data-status="online"]) {
@@ -315,6 +317,25 @@ body {
 		.status {
 			color: var(--color-primary);
 			font-weight: 600;
+			display: flex;
+		}
+
+		&::after {
+			content: attr(data-time);
+			position: absolute;
+			top: calc(100% + 8px);
+			background: var(--color-background);
+			border: 1px solid var(--color-primary);
+			padding: .15em .45em;
+			border-radius: 2px;
+			transition: .2s var(--ease-back-out);
+			opacity: 0;
+			transform: translateY(-15%);
+		}
+
+		&:where(:hover, :focus-visible)::after {
+			opacity: 1;
+			transform: translateY(0);
 		}
 	}
 }
@@ -379,7 +400,7 @@ body {
     border: none;
     color: var(--color-text);
     cursor: pointer;
-    transition: background-color .25s ease-in-out;
+    transition: background-color .25s var(--ease-back-out);
 
     &:is(:hover, :focus) {
       background-color: color-mix(in srgb, var(--color-blue) 80%, black);
@@ -397,7 +418,7 @@ body {
 	input:-webkit-autofill:focus-visible,
 	input:-webkit-autofill:active {
 		font-size: 1rem;
-		transition: background-color 5000s ease-in-out 0s;
+		transition: background-color 5000s var(--ease-back-out) 0s;
 		-webkit-text-fill-color: var(--input-color) !important;
 		caret-color: var(--input-color);
 	}
