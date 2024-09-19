@@ -5,7 +5,7 @@ class Home {
 	 * @param {Object} data - The data to render.
 	 */
 	async render (reply, data) {
-		await reply.code(200).view('logs.njk', { logs: data.logs, services: data.servicesUrl })
+		await reply.code(200).view('layout/layout.html', { logs: data.logs, services: data.servicesUrl })
 	}
 }
 

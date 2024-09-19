@@ -1,6 +1,7 @@
 import App from './classes/App.js'
 import cors from '@fastify/cors'
 import view from '@fastify/view'
+import vue from '@fastify/vue'
 import fstatic from '@fastify/static'
 // import favicons from 'fastify-favicon'
 import path from 'path'
@@ -36,11 +37,9 @@ class Server {
 
   setupViewEngine () {
     this.app.register(view, {
-      engine: { nunjucks: config.viewEngine },
-      root: config.paths.views,
-      options: {
-        onConfigure: nunjucksFilters
-      }
+			engine: { vue },
+      root: path.join(this.dirname, '../views'),
+			options: {}
     })
   }
 
