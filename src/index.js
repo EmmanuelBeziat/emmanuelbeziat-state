@@ -2,7 +2,7 @@ import App from './classes/App.js'
 import cors from '@fastify/cors'
 import view from '@fastify/view'
 import fstatic from '@fastify/static'
-// import favicons from 'fastify-favicon'
+import favicons from 'fastify-favicon'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { config, nunjucksFilters } from './config/index.js'
@@ -51,13 +51,10 @@ class Server {
   }
 
   setupFavicons () {
-    /* this.app.register(favicons, {
+    this.app.register(favicons, {
       path: config.paths.favicons,
       name: 'favicon.ico'
-    }) */
-		this.app.get('/favicon.ico', (request, reply) => {
-			reply.sendFile('favicons/favicon.ico')
-		})
+    })
   }
 
   /**
