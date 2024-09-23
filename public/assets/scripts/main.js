@@ -86,7 +86,7 @@ const updateLogsView = (log) => {
 }
 
 const getWebSocket = () => {
-	const socket = new WebSocket('ws://state.emmanuelbeziat.com:3078')
+	const socket = new WebSocket('wss://state.emmanuelbeziat.com:3078')
 	socket.onmessage = event => {
 		const newLogs = JSON.parse(event.data)
 		updateLogsView(newLogs)
