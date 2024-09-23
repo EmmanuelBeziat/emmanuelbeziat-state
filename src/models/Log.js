@@ -1,5 +1,7 @@
 import fs from 'fs/promises'
 import path from 'path'
+import chokidar from 'chokidar'
+import { formatDateRelative } from '../utils/filters.js'
 
 class Log {
 	constructor () {
@@ -108,6 +110,50 @@ class Log {
 			return 'idle'
 		}
 	}
+
+	/**
+   * Watch for changes in both output.log and status.log files
+   * @param {object} websocket - WebSocket object for sending updates
+   */
+  async watchLogs (websocket) {
+    const folders = await this.getValidFolders()
+    const watcher = chokidar.watch(folders.map(folder => [
+      path.join(this.path, folder, this.logFile),
+      path.join(this.path, folder, this.statusFile)
+    ]).flat()) // Watch both logFile and statusFile
+
+    watcher.on('change', async (logFilePath) => {
+      const logFileName = path.basename(logFilePath)
+      await this.handleLogChange(logFilePath, logFileName, websocket)
+    })
+
+    watcher.on('error', error => console.error('Watcher error:', error))
+  }
+
+	/**
+   * Helper method to handle log changes (output or status)
+   * @param {string} logFilePath - Path of the changed log file
+   * @param {string} logType - Type of log ("output" or "status")
+   * @param {object} websocket - WebSocket object for sending updates
+   */
+  async handleLogChange (logFilePath, logType, websocket) {
+    const folder = path.basename(path.dirname(logFilePath))
+		const fileName = path.join(folder, logType)
+    const content = await this.getLogContent(fileName)
+		const type = logType.split('.')[0]
+    const lastChange = await this.getLogLastEdit(fileName)
+    const date = {
+      timestamp: lastChange,
+      formattedDate: formatDateRelative(lastChange)
+    }
+
+    if (logType === this.logFile) {
+      websocket.send(JSON.stringify({ folder, type, logs: content, date }))
+    }
+		else if (logType === this.statusFile) {
+      websocket.send(JSON.stringify({ folder, type, status: content.trim(), date }))
+    }
+  }
 }
 
 export default Log

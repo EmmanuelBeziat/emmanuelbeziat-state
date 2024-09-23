@@ -18,6 +18,9 @@ export const config = {
     // Path to the favicons directory within the public folder
     favicons: path.resolve(__dirname, '../../public/favicons')
   },
+	websocket: {
+		port: process.env.WEBSOCKET_PORT || '4080'
+	},
   cors: {
     origin: true,
     credentials: true

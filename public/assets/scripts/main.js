@@ -40,9 +40,9 @@ const statuses = () => {
 				serviceStatus.forEach(service => {
 					const listItem = document.querySelector(`[data-url="${service.url}"]`)
 					const status = listItem.querySelector('.status')
-					if (!listItem) return
+					if (!listItem || !status) return
 					status.innerHTML = service.online ? '✅' : '❌'
-					listItem.dataset.status = service.online ? 'online' : 'offline';
+					listItem.dataset.status = service.online ? 'online' : 'offline'
 					listItem.dataset.time = `${service.time.toFixed(0)}ms`
 				})
 			})
@@ -56,8 +56,46 @@ const statuses = () => {
 	}
 }
 
+const updateLogsView = (log) => {
+	const logCard = document.getElementById(log.folder)
+	if (!logCard) return
+
+	if (log.type === 'output') {
+		const code = logCard.querySelector('.log-details-code code')
+		if (!code) return
+
+		code.removeAttribute('data-highlighted')
+		code.innerHTML = log.logs
+		hljs.highlightElement(code)
+	}
+	else if (log.type === 'status') {
+		const statusElement = logCard.querySelector('.log-status')
+		if (!statusElement) return
+
+		logCard.dataset.status = log.status
+		statusElement.textContent = log.status
+	}
+
+	// Update the time element with the new log modification time
+	const timeElement = logCard.querySelector('.log-time')
+	if (timeElement) {
+		console.log(log.date)
+		timeElement.setAttribute('timestamp', log.date.timestamp)
+		timeElement.textContent = log.date.formattedDate
+	}
+}
+
+const getWebSocket = () => {
+	const socket = new WebSocket('ws://localhost:3078')
+	socket.onmessage = event => {
+		const newLogs = JSON.parse(event.data)
+		updateLogsView(newLogs)
+	}
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 	logsModales()
 	highlightJS()
 	statuses()
+	getWebSocket()
 })
