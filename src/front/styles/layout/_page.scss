@@ -1,0 +1,45 @@
+.page {
+	display: grid;
+	min-height: 100dvh;
+	grid-template-columns: 1fr clamp(10rem, 100vw, var(--container-width)) 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "Header Header Header"
+    ". Main ."
+    "Footer Footer Footer";
+
+	.header {
+		grid-area: Header;
+		padding: var(--gutter-screen-mid) var(--gutter-screen);
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+		justify-content: space-between;
+
+	}
+
+	.header-title {
+		margin: 0;
+		color: var(--color-green);
+
+		span {
+			color: var(--color-blue);
+
+			&::before {
+				content: ":: ";
+				color: var(--color-text);
+			}
+		}
+	}
+
+	.main {
+		grid-area: Main;
+		padding: var(--gutter-screen);
+	}
+
+	.footer {
+		grid-area: Footer;
+		padding: var(--gutter-screen-mid) var(--gutter-screen);
+		text-align: center;
+	}
+}

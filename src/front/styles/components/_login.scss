@@ -1,0 +1,83 @@
+.login-form {
+  padding: var(--gutter-screen-mid);
+  background: var(--color-background-light);
+  border: 1px solid var(--color-background-lighter);
+  border-radius: .25rem;
+  color: var(--color-text);
+
+  h2 {
+    margin-block: 0 1.5rem;
+    color: var(--color-green);
+    font-size: var(--font-size-heading-4);
+    text-align: center;
+  }
+
+	.form {
+		display: flex;
+		flex-direction: column;
+		gap: var(--gutter-screen-mid);
+	}
+
+  label {
+    color: var(--color-subwhite);
+  }
+
+  :where(input, button) {
+    padding: calc(var(--gutter-screen-mid) / 2) var(--gutter-screen-mid);
+    border-radius: .25rem;
+    font-family: var(--font-stack-common);
+    font-size: var(--font-size-base);
+		flex: 1;
+  }
+
+  input {
+		--input-color: var(--color-text);
+		--input-border: var(--color-background-lighter);
+    background: var(--color-background);
+    border: 1px solid var(--input-border);
+    color: var(--input-color);
+
+    &:focus-visible {
+      outline: none;
+      --input-border: var(--color-blue);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-text) 30%, transparent);
+    }
+
+		&:user-invalid {
+			--input-color: var(--color-red);
+			--input-border: var(--color-red);
+		}
+
+		&:user-valid {
+			--input-color: var(--color-blue);
+		}
+  }
+
+  .button {
+    background: var(--color-blue);
+    border: none;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background-color .25s var(--ease-back-out);
+
+    &:is(:hover, :focus) {
+      background-color: color-mix(in srgb, var(--color-blue) 80%, black);
+    }
+  }
+
+  .error {
+    color: var(--color-red);
+		margin-bottom: 1rem;
+  }
+
+	input:-webkit-autofill,
+	input:-webkit-autofill:hover,
+	input:-webkit-autofill:focus,
+	input:-webkit-autofill:focus-visible,
+	input:-webkit-autofill:active {
+		font-size: 1rem;
+		transition: background-color 5000s var(--ease-back-out) 0s;
+		-webkit-text-fill-color: var(--input-color) !important;
+		caret-color: var(--input-color);
+	}
+}
