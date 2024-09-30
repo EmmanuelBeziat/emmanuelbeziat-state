@@ -14,6 +14,8 @@
 	--color-background-dark: #1b1627;
 	--color-background-darker: #171320;
 	--font-stack-common: "Source Sans 3", system-ui, "Segoe UI", "Helvetica Neue", Roboto, Arial, sans-serif;
+	--font-stack-heading: "Yanone Kaffeesatz", "Source Sans 3", system-ui, "Segoe UI", "Helvetica Neue", Roboto, Arial, sans-serif;
+	--font-stack-code: "JetBrains Mono", monospace;
 	--font-size-base: 16px;
 	--font-size-heading-1: 3.815rem;
 	--font-size-heading-2: 3.052rem;
@@ -33,6 +35,10 @@
 	scrollbar-gutter: stable;
 }
 
+@import "../fonts/source-sans-3/source-sans-3.css";
+@import "../fonts/yanone-kaffeesatz/yanone-kaffeesatz.css";
+@import "../fonts/jetbrains-mono/jetbrains-mono.css";
+
 *,
 *::before,
 *::after {
@@ -40,8 +46,6 @@
 }
 
 html {
-	font-family: system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-	line-height: 1.15;
 	-webkit-text-size-adjust: 100%;
 	-moz-tab-size: 4;
 	tab-size: 4;
@@ -64,6 +68,11 @@ body {
 		filter: blur(0);
 		transition: filter .25s var(--ease-back-out);
 	}
+}
+
+h1, h2, h3, h4, h5 {
+	font-family: var(--font-stack-heading);
+	font-weight: 400;
 }
 
 .button {
@@ -101,6 +110,7 @@ body {
 
 		.header-title {
 			margin: 0;
+			font: 400 var(--font-size-heading-3)/1.25 var(--font-stack-heading);
 			color: var(--color-green);
 
 			span {
@@ -187,9 +197,11 @@ body {
 		grid-area: Status;
 		background: var(--log-status, var(--color-subwhite));
 		color: var(--color-background-dark);
+		font-family: var(--font-stack-common);
+		font-size: 1rem;
 		border-radius: .5rem;
 		padding-inline: .45em;
-		font-size: 85%;
+		font-size: 80%;
 	}
 
 	.log-time {
@@ -252,6 +264,7 @@ body {
 		margin-block: 0;
 		align-self: flex-start;
 		color: var(--log-primary);
+		font-family: var(--font-stack-common);
 		text-align: center;
 	}
 
@@ -281,8 +294,11 @@ body {
 		pre {
 			white-space: break-spaces;
 			margin: 0;
+			font-family: var(--font-stack-code);
+			font-size: .825rem;
 
 			.hljs {
+				font: inherit;
 				background: none;
 				padding: 0;
 			}
@@ -347,10 +363,10 @@ body {
   border-radius: .25rem;
   color: var(--color-text);
 
-  h2 {
+  .form-title {
     margin-block: 0 1.5rem;
     color: var(--color-green);
-    font-size: var(--font-size-heading-4);
+    font: 700 var(--font-size-heading-4)/1.25 var(--font-stack-heading);
     text-align: center;
   }
 

@@ -5,10 +5,10 @@
   border-radius: .25rem;
   color: var(--color-text);
 
-  h2 {
+  .form-title {
     margin-block: 0 1.5rem;
     color: var(--color-green);
-    font-size: var(--font-size-heading-4);
+    font: 700 var(--font-size-heading-4)/1.25 var(--font-stack-heading);
     text-align: center;
   }
 
