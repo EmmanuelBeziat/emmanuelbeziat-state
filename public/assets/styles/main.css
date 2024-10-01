@@ -105,6 +105,7 @@ h1, h2, h3, h4, h5 {
 		padding: var(--gutter-screen-mid) var(--gutter-screen);
 		display: flex;
 		gap: 1rem;
+		flex-wrap: wrap;
 		align-items: center;
 		justify-content: space-between;
 

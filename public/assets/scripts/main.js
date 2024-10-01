@@ -76,6 +76,9 @@ const updateLogsView = (log) => {
 		statusElement.textContent = log.status
 	}
 
+	// Push the logcard at the top
+	logCard.parentNode.prepend(logCard)
+
 	// Update the time element with the new log modification time
 	const timeElement = logCard.querySelector('.log-time')
 	if (timeElement) {
@@ -86,7 +89,7 @@ const updateLogsView = (log) => {
 }
 
 const getWebSocket = () => {
-	const socket = new WebSocket('wss://state.emmanuelbeziat.com:3078')
+	const socket = new WebSocket('ws://127.0.0.1:3078')
 	socket.onmessage = event => {
 		const newLogs = JSON.parse(event.data)
 		updateLogsView(newLogs)
