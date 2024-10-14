@@ -50,7 +50,7 @@ function createDummyContent() {
   }
 }
 
-async function setup() {
+async function setup () {
   await createEnvFile()
   createDummyContent()
   console.log('Setup completed.')
