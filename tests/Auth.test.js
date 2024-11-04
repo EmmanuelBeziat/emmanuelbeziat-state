@@ -1,3 +1,4 @@
+import { describe, beforeEach, expect, vi } from 'vitest'
 import { Auth } from '../src/classes/Auth.js'
 import basicAuth from '@fastify/basic-auth'
 
@@ -7,11 +8,11 @@ describe('Auth Class', () => {
 
   beforeEach(() => {
     mockFastifyInstance = {
-      register: jest.fn(),
-      get: jest.fn(),
-      post: jest.fn(),
-      clearCookie: jest.fn(),
-      setCookie: jest.fn(),
+      register: vi.fn(),
+      get: vi.fn(),
+      post: vi.fn(),
+      clearCookie: vi.fn(),
+      setCookie: vi.fn(),
     }
     auth = new Auth(mockFastifyInstance)
   })
@@ -42,7 +43,7 @@ describe('Auth Class', () => {
   })
 
   test('applyAuth should call done for public paths', () => {
-    const mockDone = jest.fn()
+    const mockDone = vi.fn()
     const mockRequest = { url: '/assets/' }
     auth.applyAuth(mockRequest, {}, mockDone)
     expect(mockDone).toHaveBeenCalled()
@@ -50,8 +51,8 @@ describe('Auth Class', () => {
 
   test('applyAuth should call basicAuth for non-public paths', () => {
     const mockRequest = { url: '/private/' }
-    auth.app.basicAuth = jest.fn()
-    auth.applyAuth(mockRequest, {}, jest.fn())
+    auth.app.basicAuth = vi.fn()
+    auth.applyAuth(mockRequest, {}, vi.fn())
     expect(auth.app.basicAuth).toHaveBeenCalledWith(mockRequest, {}, expect.any(Function))
   })
 

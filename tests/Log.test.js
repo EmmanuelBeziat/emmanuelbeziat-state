@@ -1,7 +1,8 @@
+import { test, expect, vi } from 'vitest'
 import Log from '../src/models/Log.js'
 import fs from 'fs/promises'
 
-jest.mock('fs/promises')
+vi.mock('fs/promises')
 
 describe('Log Class', () => {
 	let log

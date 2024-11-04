@@ -5,7 +5,7 @@ import cookie from '@fastify/cookie'
 import { Router } from '../src/routes/Routes.js'
 import { Auth } from '../src/classes/Auth.js'
 import { formatDate, formatDateRelative, sortByDate } from '../src/utils/filters.js'
-
+import { test, expect, beforeAll, afterAll } from 'vitest'
 
 describe('Routes', () => {
   let app, auth, router, authCookie

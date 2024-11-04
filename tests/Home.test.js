@@ -1,3 +1,4 @@
+import { test, expect, vi } from 'vitest'
 import Home from '../src/models/Home.js'
 import Service from '../src/models/Service.js'
 
@@ -8,8 +9,8 @@ describe('Home Class', () => {
 		home = new Home()
 		service = new Service()
 		reply = {
-			code: jest.fn().mockReturnThis(),
-			view: jest.fn()
+			code: vi.fn().mockReturnThis(),
+			view: vi.fn()
 		}
 	})
 
@@ -19,7 +20,7 @@ describe('Home Class', () => {
 			{ name: 'App 1', url: 'http://app1.com', online: true },
 			{ name: 'App 2', url: 'http://app2.com', online: false }
 		]
-		service.checkAllServices = jest.fn().mockResolvedValue(serviceStatus)
+		service.checkAllServices = vi.fn().mockResolvedValue(serviceStatus)
 
 		home.render(reply, { logs, services: serviceStatus })
 

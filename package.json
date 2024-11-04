@@ -29,14 +29,7 @@
     "dev": "node --watch -r dotenv/config src/index.js",
     "prod": "nodemon -r dotenv/config src/index.js",
     "deploy": "pm2 start src/index.js --name 'emmanuelb-state' --node-args='-r dotenv/config' || pm2 reload emmanuelb-state --update-env",
-    "test": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js",
-    "test:env": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Environment.test.js",
-    "test:class:auth": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Home.test.js",
-    "test:class:home": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Home.test.js",
-    "test:class:log": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Log.test.js",
-    "test:filters": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Filters.test.js",
-    "test:templates": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Templates.test.js",
-    "test:routes": "cross-env NODE_ENV=test node -r dotenv/config node_modules/jest/bin/jest.js tests/Routes.test.js"
+    "test": "vitest --run"
   },
   "dependencies": {
     "@fastify/basic-auth": "^6.0.1",
@@ -52,6 +45,7 @@
     "fastify-favicon": "^5.0.0",
     "highlight.js": "^11.10.0",
     "nunjucks": "^3.2.4",
+    "vitest": "^2.1.4",
     "ws": "^8.18.0"
   },
   "devDependencies": {
@@ -59,7 +53,6 @@
     "@babel/preset-env": "^7.26.0",
     "cross-env": "^7.0.3",
     "inquirer": "^12.0.1",
-    "jest": "^29.7.0",
     "supertest": "^7.0.0"
   },
   "peerDependencies": {
