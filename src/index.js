@@ -13,52 +13,52 @@ import Log from './models/Log.js'
  * Initializes the server with necessary plugins and configurations
  */
 class Server {
-  constructor () {
-    this.app = App
-    this.dirname = path.dirname(fileURLToPath(import.meta.url))
+	constructor () {
+		this.app = App
+		this.dirname = path.dirname(fileURLToPath(import.meta.url))
 
-    this.setupPlugins()
+		this.setupPlugins()
 		this.createWebSocket()
-  }
+	}
 
-  setupPlugins () {
-    this.setupCors()
-    this.setupFormBody()
-    this.setupViewEngine()
-    this.setupStaticFiles()
-    this.setupFavicons()
-  }
+	setupPlugins () {
+		this.setupCors()
+		this.setupFormBody()
+		this.setupViewEngine()
+		this.setupStaticFiles()
+		this.setupFavicons()
+	}
 
-  setupCors () {
-    this.app.register(cors, config.cors)
-  }
+	setupCors () {
+		this.app.register(cors, config.cors)
+	}
 
-  setupFormBody () {
-    this.app.register(import('@fastify/formbody'))
-  }
+	setupFormBody () {
+		this.app.register(import('@fastify/formbody'))
+	}
 
-  setupViewEngine () {
-    this.app.register(view, {
-      engine: { nunjucks: config.viewEngine },
-      root: config.paths.views,
-      options: {
-        onConfigure: nunjucksFilters
-      }
-    })
-  }
+	setupViewEngine () {
+		this.app.register(view, {
+			engine: { nunjucks: config.viewEngine },
+			root: config.paths.views,
+			options: {
+				onConfigure: nunjucksFilters
+			}
+		})
+	}
 
-  setupStaticFiles () {
-    this.app.register(fstatic, {
-      root: config.paths.public
-    })
-  }
+	setupStaticFiles () {
+		this.app.register(fstatic, {
+			root: config.paths.public
+		})
+	}
 
-  setupFavicons () {
-    this.app.register(favicons, {
-      path: config.paths.favicons,
-      name: 'favicon.ico'
-    })
-  }
+	setupFavicons () {
+		this.app.register(favicons, {
+			path: config.paths.favicons,
+			name: 'favicon.ico'
+		})
+	}
 
 	createWebSocket () {
 		const wss = new WebSocketServer({ port: config.websocket.port })
@@ -74,19 +74,19 @@ class Server {
 		})
 	}
 
-  /**
-   * Starts the server on the specified host and port
-   */
-  async start () {
-    try {
+	/**
+	 * Starts the server on the specified host and port
+	 */
+	async start () {
+		try {
 			const address = await this.app.listen({ port: config.port, host: config.host })
-      console.log(`Server started on ${address}`)
-    }
+			console.log(`Server started on ${address}`)
+		}
 		catch (error) {
-      console.error(`Error starting server: ${error}`)
-      process.exit(1)
-    }
-  }
+			console.error(`Error starting server: ${error}`)
+			process.exit(1)
+		}
+	}
 }
 
 export default new Server().start()
