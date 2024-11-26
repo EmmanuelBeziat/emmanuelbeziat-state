@@ -45,7 +45,7 @@
     "fastify-favicon": "^5.0.0",
     "highlight.js": "^11.10.0",
     "nunjucks": "^3.2.4",
-    "vitest": "^2.1.5",
+    "vitest": "^2.1.6",
     "ws": "^8.18.0"
   },
   "devDependencies": {
