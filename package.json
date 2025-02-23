@@ -46,7 +46,7 @@
     "highlight.js": "^11.11.1",
     "nunjucks": "^3.2.4",
     "vitest": "^3.0.6",
-    "ws": "^8.18.0"
+    "ws": "^8.18.1"
   },
   "devDependencies": {
     "@babel/core": "^7.26.9",
