@@ -22,38 +22,42 @@ const highlightJS = () => {
 	hljs.highlightAll()
 }
 
+let etag = null
 const statuses = () => {
-	const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 	const getStatus = async url => {
-		await delay(500)
-		fetch(url)
-			.then(response => {
-				if (!response.ok) {
-					throw new Error('Network response was not ok')
-				}
-				return response.json()
-			})
-			.then(serviceStatus => {
-				if (!Array.isArray(serviceStatus)) {
-					throw new Error('Service status is not an array')
-				}
-				serviceStatus.forEach(service => {
-					const listItem = document.querySelector(`[data-url="${service.url}"]`)
-					const status = listItem.querySelector('.status')
-					if (!listItem || !status) return
-					listItem.dataset.status = service.online ? 'online' : 'offline'
+		const headers = {}
+		if (etag) headers['If-None-Match'] = etag
 
-					if (!service.online) return
-					listItem.dataset.time = `${service.time.toFixed(0)}ms`
-				})
+		const response = await fetch(url, { headers })
+		if (response.status === 304) {
+			console.log('Resource not modified, using cached version')
+			return
+		}
+
+		if (response.ok) {
+			etag = response.headers.get('ETag')
+			const data = await response.json()
+			if (!Array.isArray(data)) {
+				throw new Error('Service status is not an array')
+			}
+
+			data.forEach(service => {
+				const listItem = document.querySelector(`[data-url="${service.url}"]`)
+				const status = listItem.querySelector('.status')
+				if (!listItem || !status) return
+				listItem.dataset.status = service.online ? 'online' : 'offline'
+
+				if (!service.online) return
+				listItem.dataset.time = `${service.time.toFixed(0)}ms`
 			})
-			.catch(error => {
-				console.error('Error fetching service statuses:', error)
-			})
+		}
+		else {
+			console.error('Failed to fetch resource')
+		}
 	}
 
 	if (document.querySelector('.services-list')) {
-		getStatus('/api/service-statuses')
+		setInterval(() => getStatus('/api/service-statuses'), 30000)
 	}
 }
 
