@@ -57,6 +57,7 @@ const statuses = () => {
 	}
 
 	if (document.querySelector('.services-list')) {
+		setTimeout(() => getStatus('/api/service-statuses'), 500)
 		setInterval(() => getStatus('/api/service-statuses'), 30000)
 	}
 }
