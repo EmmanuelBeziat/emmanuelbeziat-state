@@ -321,7 +321,7 @@ h1, h2, h3, h4, h5 {
 		background: var(--log-bg, var(--color-background-light));
 		color: var(--log-color, var(--color-text));
 		font-size: .85rem;
-		border: 1px solid var(--color-primary, var(--color-background-lighter));
+		border: 1px solid var(--color-status, var(--color-background-lighter));
 		display: flex;
 		position: relative;
 		align-items: center;
@@ -329,16 +329,40 @@ h1, h2, h3, h4, h5 {
 		gap: .5rem;
 
 		&:is([data-status="online"]) {
-			--color-primary: var(--color-green);
+			--color-status: var(--color-green);
 		}
 		&:is([data-status="offline"]) {
-			--color-primary: var(--color-red);
+			--color-status: var(--color-red);
 		}
 
 		.status {
-			color: var(--color-primary);
+			color: var(--color-status);
 			font-weight: 600;
 			display: flex;
+
+			svg {
+				width: 1em;
+				display: none;
+				fill: var(--color-status);
+			}
+		}
+
+		&:not([data-status]) {
+			[data-icon="load"] {
+				display: block;
+			}
+		}
+
+		&[data-status="online"] {
+			[data-icon="online"] {
+				display: block;
+			}
+		}
+
+		&[data-status="offline"] {
+			[data-icon="offline"] {
+				display: block;
+			}
 		}
 
 		&::after {
@@ -346,7 +370,7 @@ h1, h2, h3, h4, h5 {
 			position: absolute;
 			top: calc(100% + 8px);
 			background: var(--color-background);
-			border: 1px solid var(--color-primary);
+			border: 1px solid var(--color-status);
 			padding: .15em .45em;
 			border-radius: 2px;
 			transition: .2s var(--ease-back-out);

@@ -41,7 +41,6 @@ const statuses = () => {
 					const listItem = document.querySelector(`[data-url="${service.url}"]`)
 					const status = listItem.querySelector('.status')
 					if (!listItem || !status) return
-					status.innerHTML = service.online ? '✅' : '❌'
 					listItem.dataset.status = service.online ? 'online' : 'offline'
 
 					if (!service.online) return
