@@ -38,17 +38,19 @@ function createDummyContent () {
   const logsPath = process.env.LOGS_PATH || '.logs'
   const fileLog = process.env.FILE_LOG || 'output.log'
   const fileStatus = process.env.FILE_STATUS || 'status.log'
+	const statusList = process.env.STATUS_LIST.split(',') || ['success']
 
   if (!fs.existsSync(logsPath)) {
     fs.mkdirSync(logsPath)
   }
 
-  for (let i = 1; i <= 5; i++) {
-    const folderPath = path.join(__dirname, logsPath, `test-folder-${i}`)
+	console.log(typeof statusList)
+  statusList.forEach(status => {
+    const folderPath = path.join(__dirname, logsPath, `test-folder-${status}`)
     fs.mkdirSync(folderPath)
     fs.writeFileSync(path.join(folderPath, fileLog), 'Fake log content')
-    fs.writeFileSync(path.join(folderPath, fileStatus), 'Success')
-  }
+    fs.writeFileSync(path.join(folderPath, fileStatus), status)
+  })
 }
 
 async function setup () {

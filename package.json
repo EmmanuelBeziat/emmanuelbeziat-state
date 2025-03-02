@@ -24,7 +24,7 @@
   "homepage": "https://github.com/EmmanuelBeziat/emmanuelbeziat-state#readme",
   "type": "module",
   "scripts": {
-    "setup": "npm i && node setup.js",
+    "setup": "npm ci && node setup.js",
     "start": "npm run dev",
     "dev": "node --watch -r dotenv/config src/index.js",
     "prod": "nodemon -r dotenv/config src/index.js",
