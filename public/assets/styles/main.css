@@ -82,14 +82,10 @@ h1, h2, h3, h4, h5 {
 	padding: .5em 1em;
 	color: var(--color-subwhite);
 	transition: .25s var(--ease-back-out);
-
-	/* &:hover,
-	&:focus-visible {
-
-	} */
 }
 
 .page {
+	container-type: inline-size;
 	display: grid;
 	min-height: 100dvh;
 	grid-template-columns: 1fr clamp(10rem, 100vw, var(--container-width)) 1fr;
@@ -123,7 +119,7 @@ h1, h2, h3, h4, h5 {
 			}
 		}
 
-		@media (width < 650px) {
+		@container (width < 650px) {
 			flex-direction: column;
 		}
 	}
