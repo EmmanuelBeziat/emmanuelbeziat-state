@@ -22,8 +22,8 @@ const highlightJS = () => {
 	hljs.highlightAll()
 }
 
-let etag = null
 const statuses = () => {
+	let etag = null
 	const getStatus = async url => {
 		const headers = {}
 		if (etag) headers['If-None-Match'] = etag
@@ -44,6 +44,7 @@ const statuses = () => {
 			data.forEach(service => {
 				const listItem = document.querySelector(`[data-url="${service.url}"]`)
 				const status = listItem.querySelector('.status')
+
 				if (!listItem || !status) return
 				listItem.dataset.status = service.online ? 'online' : 'offline'
 
@@ -62,7 +63,7 @@ const statuses = () => {
 	}
 }
 
-const updateLogsView = (log) => {
+const updateLogsView = log => {
 	const logCard = document.getElementById(log.folder)
 	if (!logCard) return
 
@@ -88,7 +89,6 @@ const updateLogsView = (log) => {
 	// Update the time element with the new log modification time
 	const timeElement = logCard.querySelector('.log-time')
 	if (timeElement) {
-		console.log(log.date)
 		timeElement.setAttribute('timestamp', log.date.timestamp)
 		timeElement.textContent = log.date.formattedDate
 	}
@@ -106,11 +106,11 @@ const getWebSocket = () => {
 	}
 
 	socket.onerror = error => {
-		console.error('WebSocket encountered an error:', error)
+		// console.error('WebSocket encountered an error:', error)
 	}
 
 	socket.onclose = event => {
-		console.log('WebSocket connection closed:', event)
+		// console.log('WebSocket connection closed:', event)
 	}
 }
 
