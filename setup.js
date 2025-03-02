@@ -8,7 +8,8 @@ import dotenv from 'dotenv'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-async function createEnvFile() {
+async function createEnvFile () {
+	const envPath = path.join(__dirname, '.env')
 	if (fs.existsSync(envPath)) {
     console.log('.env file already exists. Skipping creation.')
     return
@@ -31,7 +32,7 @@ async function createEnvFile() {
   fs.writeFileSync('.env', envContent)
 }
 
-function createDummyContent() {
+function createDummyContent () {
   dotenv.config()
 
   const logsPath = process.env.LOGS_PATH || '.logs'
