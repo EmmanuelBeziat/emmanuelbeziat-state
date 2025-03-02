@@ -4,4 +4,4 @@
 * [x] Add real-time monitoring
   * [ ] Manage better websocket connection with dynamic port
 	* [x] Reorder content in realtime
-* [ ] Make the components work in a container
+* [x] Make the components work in a container
