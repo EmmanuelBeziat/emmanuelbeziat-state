@@ -43,6 +43,8 @@ const statuses = () => {
 					if (!listItem || !status) return
 					status.innerHTML = service.online ? '✅' : '❌'
 					listItem.dataset.status = service.online ? 'online' : 'offline'
+
+					if (!service.online) return
 					listItem.dataset.time = `${service.time.toFixed(0)}ms`
 				})
 			})
