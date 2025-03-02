@@ -1,6 +1,7 @@
 @import "../fonts/source-sans-3/source-sans-3.css";
 @import "../fonts/yanone-kaffeesatz/yanone-kaffeesatz.css";
 @import "../fonts/jetbrains-mono/jetbrains-mono.css";
+
 :root {
 	--color-background: #1e192b;
 	--color-text: #eeeeee;
@@ -37,7 +38,6 @@
 	scroll-behavior: smooth;
 	scrollbar-gutter: stable;
 }
-
 
 *,
 *::before,
