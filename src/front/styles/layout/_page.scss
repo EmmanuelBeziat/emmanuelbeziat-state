@@ -2,11 +2,11 @@
 	display: grid;
 	min-height: 100dvh;
 	grid-template-columns: 1fr clamp(10rem, 100vw, var(--container-width)) 1fr;
-  grid-template-rows: auto 1fr auto;
-  grid-template-areas:
-    "Header Header Header"
-    ". Main ."
-    "Footer Footer Footer";
+	grid-template-rows: auto 1fr auto;
+	grid-template-areas:
+		"Header Header Header"
+		". Main ."
+		"Footer Footer Footer";
 
 	.header {
 		grid-area: Header;

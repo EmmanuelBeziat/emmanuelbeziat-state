@@ -13,8 +13,8 @@ const newStyle = '<link rel="stylesheet" href="/assets/styles/main.css">'
 
 // Replace existing <script> and <link> tags
 templateContent = templateContent
-  .replace(/<script.*<\/script>/, newScript)
-  .replace(/<link.*>/, newStyle)
+	.replace(/<script.*<\/script>/, newScript)
+	.replace(/<link.*>/, newStyle)
 
 // Write the updated content back to the file
 fs.writeFileSync(templatePath, templateContent)

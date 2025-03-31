@@ -11,11 +11,11 @@ class Log {
 	}
 
 	/**
-   * Retrieves all valid log folders and their content.
-   * @returns {Promise<Array>} A promise that resolves with the content of all log files.
-   */
-  async getAllLogs () {
-    try {
+	 * Retrieves all valid log folders and their content.
+	 * @returns {Promise<Array>} A promise that resolves with the content of all log files.
+	 */
+	async getAllLogs () {
+		try {
 			const folders = await this.getValidFolders()
 			const logs = await this.getLogsFromFolders(folders)
 			return logs
@@ -23,7 +23,7 @@ class Log {
 		catch (error) {
 			throw new Error(error.message || 'Unable to read logs folders')
 		}
-  }
+	}
 
 	/**
 	 * Retrieves valid folders from the log directory.
@@ -112,48 +112,48 @@ class Log {
 	}
 
 	/**
-   * Watch for changes in both output.log and status.log files
-   * @param {object} websocket - WebSocket object for sending updates
-   */
-  async watchLogs (websocket) {
-    const folders = await this.getValidFolders()
-    const watcher = chokidar.watch(folders.map(folder => [
-      path.join(this.path, folder, this.logFile),
-      path.join(this.path, folder, this.statusFile)
-    ]).flat()) // Watch both logFile and statusFile
+	 * Watch for changes in both output.log and status.log files
+	 * @param {object} websocket - WebSocket object for sending updates
+	 */
+	async watchLogs (websocket) {
+		const folders = await this.getValidFolders()
+		const watcher = chokidar.watch(folders.map(folder => [
+			path.join(this.path, folder, this.logFile),
+			path.join(this.path, folder, this.statusFile)
+		]).flat()) // Watch both logFile and statusFile
 
-    watcher.on('change', async (logFilePath) => {
-      const logFileName = path.basename(logFilePath)
-      await this.handleLogChange(logFilePath, logFileName, websocket)
-    })
+		watcher.on('change', async (logFilePath) => {
+			const logFileName = path.basename(logFilePath)
+			await this.handleLogChange(logFilePath, logFileName, websocket)
+		})
 
-    watcher.on('error', error => console.error('Watcher error:', error))
-  }
+		watcher.on('error', error => console.error('Watcher error:', error))
+	}
 
 	/**
-   * Helper method to handle log changes (output or status)
-   * @param {string} logFilePath - Path of the changed log file
-   * @param {string} logType - Type of log ("output" or "status")
-   * @param {object} websocket - WebSocket object for sending updates
-   */
-  async handleLogChange (logFilePath, logType, websocket) {
-    const folder = path.basename(path.dirname(logFilePath))
+	 * Helper method to handle log changes (output or status)
+	 * @param {string} logFilePath - Path of the changed log file
+	 * @param {string} logType - Type of log ("output" or "status")
+	 * @param {object} websocket - WebSocket object for sending updates
+	 */
+	async handleLogChange (logFilePath, logType, websocket) {
+		const folder = path.basename(path.dirname(logFilePath))
 		const fileName = path.join(folder, logType)
-    const content = await this.getLogContent(fileName)
+		const content = await this.getLogContent(fileName)
 		const type = logType.split('.')[0]
-    const lastChange = await this.getLogLastEdit(fileName)
-    const date = {
-      timestamp: lastChange,
-      formattedDate: formatDateRelative(lastChange)
-    }
+		const lastChange = await this.getLogLastEdit(fileName)
+		const date = {
+			timestamp: lastChange,
+			formattedDate: formatDateRelative(lastChange)
+		}
 
-    if (logType === this.logFile) {
-      websocket.send(JSON.stringify({ folder, type, logs: content, date }))
-    }
+		if (logType === this.logFile) {
+			websocket.send(JSON.stringify({ folder, type, logs: content, date }))
+		}
 		else if (logType === this.statusFile) {
-      websocket.send(JSON.stringify({ folder, type, status: content.trim(), date }))
-    }
-  }
+			websocket.send(JSON.stringify({ folder, type, status: content.trim(), date }))
+		}
+	}
 }
 
 export default Log

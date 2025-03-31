@@ -2,15 +2,15 @@
 
 {% block main %}
 <div class="login-form">
-  <h1 class="form-title">Login</h1>
-  {% if error %}
-    <div class="error">{{ error }}</div>
-  {% endif %}
+	<h1 class="form-title">Login</h1>
+	{% if error %}
+		<div class="error">{{ error }}</div>
+	{% endif %}
 
-  <form action="/login" method="post" class="form">
+	<form action="/login" method="post" class="form">
 		<input type="text" id="username" name="username" aria-label="Username" placeholder="MyName" minlength="5" required>
 		<input type="password" id="password" name="password" aria-label="Password" placeholder="MyPassword" minlength="5" required>
 		<button type="submit" class="button">Login</button>
-  </form>
+	</form>
 </div>
 {% endblock %}
