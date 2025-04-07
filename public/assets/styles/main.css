@@ -232,16 +232,16 @@ h1, h2, h3, h4, h5 {
 
 		transition: .25s var(--ease-back-out);
 		transition-behavior: allow-discrete;
-		transform: translateY(-1rem);
+		translate: 0 -1rem;
 
 		&[open] {
 			opacity: 1;
 			display: flex;
-			transform: translateY(0);
+			translate: 0 0;
 
 			@starting-style {
 				opacity: 0;
-				transform: translateY(-1rem);
+				translate: 0 -1rem;
 			}
 
 			&::backdrop {
@@ -375,12 +375,12 @@ h1, h2, h3, h4, h5 {
 			border-radius: 2px;
 			transition: .2s var(--ease-back-out);
 			opacity: 0;
-			transform: translateY(-15%);
+			translate: 0 -15%;
 		}
 
 		&:where(:hover, :focus-visible)::after {
 			opacity: 1;
-			transform: translateY(0);
+			translate: 0 0;
 		}
 	}
 }
