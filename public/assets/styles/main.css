@@ -89,11 +89,11 @@ h1, h2, h3, h4, h5 {
 	display: grid;
 	min-height: 100dvh;
 	grid-template-columns: 1fr clamp(10rem, 100vw, var(--container-width)) 1fr;
-  grid-template-rows: auto 1fr auto;
-  grid-template-areas:
-    "Header Header Header"
-    ". Main ."
-    "Footer Footer Footer";
+	grid-template-rows: auto 1fr auto;
+	grid-template-areas:
+		"Header Header Header"
+		". Main ."
+		"Footer Footer Footer";
 
 	.header {
 		grid-area: Header;
@@ -386,18 +386,18 @@ h1, h2, h3, h4, h5 {
 }
 
 .login-form {
-  padding: var(--gutter-screen-mid);
-  background: var(--color-background-light);
-  border: 1px solid var(--color-background-lighter);
-  border-radius: .25rem;
-  color: var(--color-text);
+	padding: var(--gutter-screen-mid);
+	background: var(--color-background-light);
+	border: 1px solid var(--color-background-lighter);
+	border-radius: .25rem;
+	color: var(--color-text);
 
-  .form-title {
-    margin-block: 0 1.5rem;
-    color: var(--color-green);
-    font: 700 var(--font-size-heading-4)/1.25 var(--font-stack-heading);
-    text-align: center;
-  }
+	.form-title {
+		margin-block: 0 1.5rem;
+		color: var(--color-green);
+		font: 700 var(--font-size-heading-4)/1.25 var(--font-stack-heading);
+		text-align: center;
+	}
 
 	.form {
 		display: flex;
@@ -405,30 +405,30 @@ h1, h2, h3, h4, h5 {
 		gap: var(--gutter-screen-mid);
 	}
 
-  label {
-    color: var(--color-subwhite);
-  }
+	label {
+		color: var(--color-subwhite);
+	}
 
-  :where(input, button) {
-    padding: calc(var(--gutter-screen-mid) / 2) var(--gutter-screen-mid);
-    border-radius: .25rem;
-    font-family: var(--font-stack-common);
-    font-size: var(--font-size-base);
+	:where(input, button) {
+		padding: calc(var(--gutter-screen-mid) / 2) var(--gutter-screen-mid);
+		border-radius: .25rem;
+		font-family: var(--font-stack-common);
+		font-size: var(--font-size-base);
 		flex: 1;
-  }
+	}
 
-  input {
+	input {
 		--input-color: var(--color-text);
 		--input-border: var(--color-background-lighter);
-    background: var(--color-background);
-    border: 1px solid var(--input-border);
-    color: var(--input-color);
+		background: var(--color-background);
+		border: 1px solid var(--input-border);
+		color: var(--input-color);
 
-    &:focus-visible {
-      outline: none;
-      --input-border: var(--color-blue);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-text) 30%, transparent);
-    }
+		&:focus-visible {
+			outline: none;
+			--input-border: var(--color-blue);
+			box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-text) 30%, transparent);
+		}
 
 		&:user-invalid {
 			--input-color: var(--color-red);
@@ -438,24 +438,24 @@ h1, h2, h3, h4, h5 {
 		&:user-valid {
 			--input-color: var(--color-blue);
 		}
-  }
+	}
 
-  .button {
-    background: var(--color-blue);
-    border: none;
-    color: var(--color-text);
-    cursor: pointer;
-    transition: background-color .25s var(--ease-back-out);
+	.button {
+		background: var(--color-blue);
+		border: none;
+		color: var(--color-text);
+		cursor: pointer;
+		transition: background-color .25s var(--ease-back-out);
 
-    &:is(:hover, :focus) {
-      background-color: color-mix(in srgb, var(--color-blue) 80%, black);
-    }
-  }
+		&:is(:hover, :focus) {
+			background-color: color-mix(in srgb, var(--color-blue) 80%, black);
+		}
+	}
 
-  .error {
-    color: var(--color-red);
+	.error {
+		color: var(--color-red);
 		margin-bottom: 1rem;
-  }
+	}
 
 	input:-webkit-autofill,
 	input:-webkit-autofill:hover,
