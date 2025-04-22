@@ -98,13 +98,6 @@ const updateLogsView = log => {
 		// Update both the dataset and the text content
 		logCard.setAttribute('data-status', newStatus)
 		statusElement.textContent = newStatus
-
-		// Debug the update
-		console.log(`Updated status for ${log.folder}:`, {
-			oldStatus: logCard.dataset.status,
-			newStatus,
-			element: statusElement
-		})
 	}
 
 	// Push the logcard at the top

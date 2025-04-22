@@ -163,7 +163,6 @@ class Log {
 			client.write({ folder, type, logs: content, date })
 		}
 		else if (logType === this.statusFile) {
-			// Handle empty status content consistently with stateChange method
 			const status = content.trim() || 'idle'
 			client.write({ folder, type, status, date })
 		}
