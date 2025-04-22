@@ -139,6 +139,10 @@ class Log {
 	async handleLogChange (logFilePath, logType, client) {
 		const folder = path.basename(path.dirname(logFilePath))
 		const fileName = path.join(folder, logType)
+
+		// Add a small delay to ensure file is fully written
+		await new Promise(resolve => setTimeout(resolve, 100))
+
 		const content = await this.getLogContent(fileName)
 		const type = logType.split('.')[0]
 		const lastChange = await this.getLogLastEdit(fileName)
@@ -147,10 +151,19 @@ class Log {
 			formattedDate: formatDateRelative(lastChange)
 		}
 
+		// Debug the content
+		console.log(`File change detected for ${fileName}:`, {
+			content,
+			trimmed: content.trim(),
+			type,
+			folder
+		})
+
 		if (logType === this.logFile) {
 			client.write({ folder, type, logs: content, date })
 		}
 		else if (logType === this.statusFile) {
+			// Handle empty status content consistently with stateChange method
 			const status = content.trim() || 'idle'
 			client.write({ folder, type, status, date })
 		}
