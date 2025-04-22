@@ -113,9 +113,9 @@ class Log {
 
 	/**
 	 * Watch for changes in both output.log and status.log files
-	 * @param {object} websocket - WebSocket object for sending updates
+	 * @param {object} client - SSE client object for sending updates
 	 */
-	async watchLogs (websocket) {
+	async watchLogs (client) {
 		const folders = await this.getValidFolders()
 		const watcher = chokidar.watch(folders.map(folder => [
 			path.join(this.path, folder, this.logFile),
@@ -124,7 +124,7 @@ class Log {
 
 		watcher.on('change', async (logFilePath) => {
 			const logFileName = path.basename(logFilePath)
-			await this.handleLogChange(logFilePath, logFileName, websocket)
+			await this.handleLogChange(logFilePath, logFileName, client)
 		})
 
 		watcher.on('error', error => console.error('Watcher error:', error))
@@ -134,9 +134,9 @@ class Log {
 	 * Helper method to handle log changes (output or status)
 	 * @param {string} logFilePath - Path of the changed log file
 	 * @param {string} logType - Type of log ("output" or "status")
-	 * @param {object} websocket - WebSocket object for sending updates
+	 * @param {object} client - SSE client object for sending updates
 	 */
-	async handleLogChange (logFilePath, logType, websocket) {
+	async handleLogChange (logFilePath, logType, client) {
 		const folder = path.basename(path.dirname(logFilePath))
 		const fileName = path.join(folder, logType)
 		const content = await this.getLogContent(fileName)
@@ -148,10 +148,10 @@ class Log {
 		}
 
 		if (logType === this.logFile) {
-			websocket.send(JSON.stringify({ folder, type, logs: content, date }))
+			client.write({ folder, type, logs: content, date })
 		}
 		else if (logType === this.statusFile) {
-			websocket.send(JSON.stringify({ folder, type, status: content.trim(), date }))
+			client.write({ folder, type, status: content.trim(), date })
 		}
 	}
 }

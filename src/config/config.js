@@ -13,9 +13,6 @@ export const config = {
 		public: path.resolve(__dirname, '../../public'),
 		favicons: path.resolve(__dirname, '../../public/favicons')
 	},
-	websocket: {
-		port: process.env.WEBSOCKET_PORT || '4080'
-	},
 	cors: {
 		origin: true,
 		credentials: true

@@ -6,8 +6,6 @@ import favicons from 'fastify-favicon'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { config, nunjucksFilters } from './config/index.js'
-import { WebSocketServer } from 'ws'
-import Log from './models/Log.js'
 
 /**
  * Initializes the server with necessary plugins and configurations
@@ -18,7 +16,6 @@ class Server {
 		this.dirname = path.dirname(fileURLToPath(import.meta.url))
 
 		this.setupPlugins()
-		this.createWebSocket()
 	}
 
 	setupPlugins () {
@@ -57,20 +54,6 @@ class Server {
 		this.app.register(favicons, {
 			path: config.paths.favicons,
 			name: 'favicon.ico'
-		})
-	}
-
-	createWebSocket () {
-		const wss = new WebSocketServer({ port: config.websocket.port })
-		wss.on('connection', ws => {
-			console.log('Client connected')
-
-			const log = new Log()
-			log.watchLogs(ws)
-
-			ws.on('close', () => {
-				console.log('Client disconnected')
-			})
 		})
 	}
 

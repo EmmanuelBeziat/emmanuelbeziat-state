@@ -94,23 +94,19 @@ const updateLogsView = log => {
 	}
 }
 
-const getWebSocket = () => {
-	const socket = new WebSocket('ws://127.0.0.1:3078')
-	socket.onopen = () => {
-		console.log('WebSocket connection opened.')
-	}
+const getSSE = () => {
+	const eventSource = new EventSource('/api/events')
 
-	socket.onmessage = event => {
+	eventSource.onmessage = event => {
 		const newLogs = JSON.parse(event.data)
 		updateLogsView(newLogs)
 	}
 
-	socket.onerror = error => {
-		// console.error('WebSocket encountered an error:', error)
-	}
-
-	socket.onclose = event => {
-		// console.log('WebSocket connection closed:', event)
+	eventSource.onerror = error => {
+		console.error('SSE error:', error)
+		eventSource.close()
+		// Attempt to reconnect after 5 seconds
+		setTimeout(() => getSSE(), 5000)
 	}
 }
 
@@ -118,5 +114,5 @@ document.addEventListener('DOMContentLoaded', () => {
 	logsModales()
 	highlightJS()
 	statuses()
-	getWebSocket()
+	getSSE()
 })

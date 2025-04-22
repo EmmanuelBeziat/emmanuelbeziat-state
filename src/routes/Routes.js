@@ -1,4 +1,4 @@
-import { HomeController, LogController, ServiceController } from '../controllers/index.js'
+import { HomeController, LogController, ServiceController, EventController } from '../controllers/index.js'
 
 /**
  * Defines application routes and their corresponding controllers.
@@ -9,11 +9,13 @@ export class Router {
 		this.home = new HomeController()
 		this.log = new LogController()
 		this.service = new ServiceController()
+		this.event = new EventController()
 		this.auth = auth
 
 		this.handleHomeRequest = this.handleHomeRequest.bind(this)
-    this.getServiceStatuses = this.getServiceStatuses.bind(this)
-    this.NotFoundHandler = this.NotFoundHandler.bind(this)
+		this.getServiceStatuses = this.getServiceStatuses.bind(this)
+		this.handleEvents = this.handleEvents.bind(this)
+		this.NotFoundHandler = this.NotFoundHandler.bind(this)
 	}
 
 	/**
@@ -22,14 +24,15 @@ export class Router {
 	 */
 	routes (app) {
 		// Apply authentication to all routes
-    app.addHook('onRequest', this.authenticateRequest.bind(this))
+		app.addHook('onRequest', this.authenticateRequest.bind(this))
 
 		// Handle not found error
 		app.setNotFoundHandler(this.NotFoundHandler)
 
 		// Define routes
 		app.get(this.apiURL, this.handleHomeRequest)
-    app.get('/api/service-statuses', this.getServiceStatuses)
+		app.get('/api/service-statuses', this.getServiceStatuses)
+		app.get('/api/events', this.handleEvents)
 	}
 
 	/**
@@ -78,6 +81,20 @@ export class Router {
       this.handleError(reply, error, 'Unable to get services')
     }
   }
+
+	/**
+	 * Handles SSE events
+	 * @param {Object} request The request object
+	 * @param {Object} reply The reply object
+	 */
+	async handleEvents (request, reply) {
+		try {
+			await this.event.handleEvents(request, reply)
+		}
+		catch (error) {
+			this.handleError(reply, error, 'Unable to establish SSE connection')
+		}
+	}
 
 	/**
    * Handles the request for a not found route
