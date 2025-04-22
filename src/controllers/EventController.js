@@ -11,10 +11,13 @@ export class EventController {
 	 * @param {Object} reply The reply object
 	 */
 	async handleEvents (request, reply) {
+		// Set headers to prevent timeouts
 		reply.raw.writeHead(200, {
 			'Content-Type': 'text/event-stream',
-			'Cache-Control': 'no-cache',
-			'Connection': 'keep-alive'
+			'Cache-Control': 'no-cache, no-transform',
+			'Connection': 'keep-alive',
+			'X-Accel-Buffering': 'no', // Disable buffering for Nginx
+			'Access-Control-Allow-Origin': '*'
 		})
 
 		const client = {
@@ -23,10 +26,25 @@ export class EventController {
 			}
 		}
 
+		// Send initial connection message
+		client.write({ type: 'connection', status: 'connected' })
+
+		// Set up heartbeat
+		const heartbeat = setInterval(() => {
+			client.write({ type: 'heartbeat', timestamp: Date.now() })
+		}, 30000) // Send heartbeat every 30 seconds
+
+		// Clean up on connection close
 		request.raw.on('close', () => {
-			// Cleanup will be handled by the Log model
+			clearInterval(heartbeat)
 		})
 
-		await this.log.watchLogs(client)
+		try {
+			await this.log.watchLogs(client)
+		}
+		catch (error) {
+			clearInterval(heartbeat)
+			throw error
+		}
 	}
 }

@@ -2,6 +2,6 @@
 
 * [x] Add auth
 * [x] Add real-time monitoring
-  * [ ] Manage better websocket connection with dynamic port
+  * [x] SSE
 	* [x] Reorder content in realtime
 * [x] Make the components work in a container

@@ -95,19 +95,53 @@ const updateLogsView = log => {
 }
 
 const getSSE = () => {
-	const eventSource = new EventSource('/api/events')
+	let reconnectAttempts = 0
+	const maxReconnectAttempts = 5
+	const reconnectDelay = 5000 // 5 seconds
 
-	eventSource.onmessage = event => {
-		const newLogs = JSON.parse(event.data)
-		updateLogsView(newLogs)
+	const connect = () => {
+		const eventSource = new EventSource('/api/events')
+
+		eventSource.onopen = () => {
+			console.log('SSE connection established')
+			reconnectAttempts = 0 // Reset reconnect attempts on successful connection
+		}
+
+		eventSource.onmessage = event => {
+			const data = JSON.parse(event.data)
+
+			// Handle different message types
+			switch (data.type) {
+				case 'connection':
+					console.log('SSE connection status:', data.status)
+					break
+				case 'heartbeat':
+					// Heartbeat received, connection is alive
+					break
+				default:
+					// Handle log updates
+					updateLogsView(data)
+			}
+		}
+
+		eventSource.onerror = error => {
+			console.error('SSE error:', error)
+			eventSource.close()
+
+			// Implement exponential backoff for reconnection
+			if (reconnectAttempts < maxReconnectAttempts) {
+				reconnectAttempts++
+				const delay = reconnectDelay * Math.pow(2, reconnectAttempts - 1)
+				console.log(`Attempting to reconnect in ${delay/1000} seconds... (Attempt ${reconnectAttempts}/${maxReconnectAttempts})`)
+				setTimeout(connect, delay)
+			}
+			else {
+				console.error('Max reconnection attempts reached. Please refresh the page.')
+			}
+		}
 	}
 
-	eventSource.onerror = error => {
-		console.error('SSE error:', error)
-		eventSource.close()
-		// Attempt to reconnect after 5 seconds
-		setTimeout(() => getSSE(), 5000)
-	}
+	connect()
 }
 
 document.addEventListener('DOMContentLoaded', () => {

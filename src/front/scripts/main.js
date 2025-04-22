@@ -23,40 +23,47 @@ const highlightJS = () => {
 }
 
 const statuses = () => {
-	const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+	let etag = null
 	const getStatus = async url => {
-		await delay(500)
-		fetch(url)
-			.then(response => {
-				if (!response.ok) {
-					throw new Error('Network response was not ok')
-				}
-				return response.json()
+		const headers = {}
+		if (etag) headers['If-None-Match'] = etag
+
+		const response = await fetch(url, { headers })
+		if (response.status === 304) {
+			console.log('Resource not modified, using cached version')
+			return
+		}
+
+		if (response.ok) {
+			etag = response.headers.get('ETag')
+			const data = await response.json()
+			if (!Array.isArray(data)) {
+				throw new Error('Service status is not an array')
+			}
+
+			data.forEach(service => {
+				const listItem = document.querySelector(`[data-url="${service.url}"]`)
+				const status = listItem.querySelector('.status')
+
+				if (!listItem || !status) return
+				listItem.dataset.status = service.online ? 'online' : 'offline'
+
+				if (!service.online) return
+				listItem.dataset.time = `${service.time.toFixed(0)}ms`
 			})
-			.then(serviceStatus => {
-				if (!Array.isArray(serviceStatus)) {
-					throw new Error('Service status is not an array')
-				}
-				serviceStatus.forEach(service => {
-					const listItem = document.querySelector(`[data-url="${service.url}"]`)
-					const status = listItem.querySelector('.status')
-					if (!listItem || !status) return
-					status.innerHTML = service.online ? '✅' : '❌'
-					listItem.dataset.status = service.online ? 'online' : 'offline'
-					listItem.dataset.time = `${service.time.toFixed(0)}ms`
-				})
-			})
-			.catch(error => {
-				console.error('Error fetching service statuses:', error)
-			})
+		}
+		else {
+			console.error('Failed to fetch resource')
+		}
 	}
 
 	if (document.querySelector('.services-list')) {
-		getStatus('/api/service-statuses')
+		setTimeout(() => getStatus('/api/service-statuses'), 500)
+		setInterval(() => getStatus('/api/service-statuses'), 30000)
 	}
 }
 
-const updateLogsView = (log) => {
+const updateLogsView = log => {
 	const logCard = document.getElementById(log.folder)
 	if (!logCard) return
 
@@ -76,20 +83,30 @@ const updateLogsView = (log) => {
 		statusElement.textContent = log.status
 	}
 
+	// Push the logcard at the top
+	logCard.parentNode.prepend(logCard)
+
 	// Update the time element with the new log modification time
 	const timeElement = logCard.querySelector('.log-time')
 	if (timeElement) {
-		console.log(log.date)
 		timeElement.setAttribute('timestamp', log.date.timestamp)
 		timeElement.textContent = log.date.formattedDate
 	}
 }
 
-const getWebSocket = () => {
-	const socket = new WebSocket('wss://127.0.0.1:3078')
-	socket.onmessage = event => {
+const getSSE = () => {
+	const eventSource = new EventSource('/api/events')
+
+	eventSource.onmessage = event => {
 		const newLogs = JSON.parse(event.data)
 		updateLogsView(newLogs)
+	}
+
+	eventSource.onerror = error => {
+		console.error('SSE error:', error)
+		eventSource.close()
+		// Attempt to reconnect after 5 seconds
+		setTimeout(() => getSSE(), 5000)
 	}
 }
 
@@ -97,5 +114,5 @@ document.addEventListener('DOMContentLoaded', () => {
 	logsModales()
 	highlightJS()
 	statuses()
-	getWebSocket()
+	getSSE()
 })
