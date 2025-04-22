@@ -151,7 +151,8 @@ class Log {
 			client.write({ folder, type, logs: content, date })
 		}
 		else if (logType === this.statusFile) {
-			client.write({ folder, type, status: content.trim(), date })
+			const status = content.trim() || 'idle'
+			client.write({ folder, type, status, date })
 		}
 	}
 }
