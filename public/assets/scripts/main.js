@@ -65,11 +65,17 @@ const statuses = () => {
 
 const updateLogsView = log => {
 	const logCard = document.getElementById(log.folder)
-	if (!logCard) return
+	if (!logCard) {
+		console.warn(`Log card not found for folder: ${log.folder}`)
+		return
+	}
 
 	if (log.type === 'output') {
 		const code = logCard.querySelector('.log-details-code code')
-		if (!code) return
+		if (!code) {
+			console.warn(`Code element not found in log card: ${log.folder}`)
+			return
+		}
 
 		code.removeAttribute('data-highlighted')
 		code.innerHTML = log.logs
@@ -77,10 +83,28 @@ const updateLogsView = log => {
 	}
 	else if (log.type === 'status') {
 		const statusElement = logCard.querySelector('.log-status')
-		if (!statusElement) return
+		if (!statusElement) {
+			console.warn(`Status element not found in log card: ${log.folder}`)
+			return
+		}
 
-		logCard.dataset.status = log.status
-		statusElement.textContent = log.status
+		// Ensure status is a string and not empty
+		const newStatus = String(log.status || '').trim()
+		if (!newStatus) {
+			console.warn(`Empty status received for log card: ${log.folder}`)
+			return
+		}
+
+		// Update both the dataset and the text content
+		logCard.setAttribute('data-status', newStatus)
+		statusElement.textContent = newStatus
+
+		// Debug the update
+		console.log(`Updated status for ${log.folder}:`, {
+			oldStatus: logCard.dataset.status,
+			newStatus,
+			element: statusElement
+		})
 	}
 
 	// Push the logcard at the top
