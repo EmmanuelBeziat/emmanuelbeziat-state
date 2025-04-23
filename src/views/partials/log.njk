@@ -4,6 +4,6 @@
 		<div class="log-status">{{ log.status }}</div>
 		<time class="log-time" data-realtime timestamp="{{ log.date }}">{{ log.date | formatDateRelative }}</time>
 	</header>
-
-	{% include "partials/modal.njk" %}
 </article>
+
+{% include "partials/modal.njk" %}
