@@ -1,14 +1,25 @@
 export default class LogsManager {
-	constructor() {
+	/**
+	 * Creates a new LogsManager instance
+	 * Initializes modals and code highlighting
+	 */
+	constructor () {
 		this.setupModals()
 		this.setupCodeHighlighting()
 	}
 
-	setupModals() {
+	/**
+	 * Sets up modal dialogs for all log entries
+	 */
+	setupModals () {
 		document.querySelectorAll('.log').forEach(log => this.setupModal(log))
 	}
 
-	setupModal(log) {
+	/**
+	 * Configures a single modal dialog for a log entry
+	 * @param {HTMLElement} log - The log element to setup the modal for
+	 */
+	setupModal (log) {
 		const opener = log.querySelector('.log-details-opener')
 		const dialog = document.getElementById(`modal-${log.id}`)
 		const closer = dialog.querySelector('.log-details-closer')
@@ -20,11 +31,18 @@ export default class LogsManager {
 		})
 	}
 
-	setupCodeHighlighting() {
+	/**
+	 * Initializes syntax highlighting for code blocks
+	 */
+	setupCodeHighlighting () {
 		hljs.highlightAll()
 	}
 
-	updateLog(log) {
+	/**
+	 * Updates a log entry with new data
+	 * @param {Object} log - The log data to update
+	 */
+	updateLog (log) {
 		const logCard = document.getElementById(log.folder)
 		if (!logCard) {
 			console.warn(`Log card not found for folder: ${log.folder}`)
@@ -39,7 +57,8 @@ export default class LogsManager {
 
 		if (log.type === 'output') {
 			this.updateOutputLog(log, dialog)
-		} else if (log.type === 'status') {
+		}
+		else if (log.type === 'status') {
 			this.updateStatusLog(log, logCard, dialog)
 		}
 
@@ -47,7 +66,12 @@ export default class LogsManager {
 		this.updateTimestamp(logCard, log.date)
 	}
 
-	updateOutputLog(log, dialog) {
+	/**
+	 * Updates the output log content in a modal dialog
+	 * @param {Object} log - The log data containing output content
+	 * @param {HTMLElement} dialog - The modal dialog element
+	 */
+	updateOutputLog (log, dialog) {
 		const code = dialog.querySelector('.log-details-code code')
 		if (!code) {
 			console.warn(`Code element not found in log card: ${log.folder}`)
@@ -61,7 +85,13 @@ export default class LogsManager {
 		}
 	}
 
-	updateStatusLog(log, logCard, dialog) {
+	/**
+	 * Updates the status information for a log entry
+	 * @param {Object} log - The log data containing status information
+	 * @param {HTMLElement} logCard - The log card element
+	 * @param {HTMLElement} dialog - The modal dialog element
+	 */
+	updateStatusLog (log, logCard, dialog) {
 		const statusElement = logCard.querySelector('.log-status')
 		if (!statusElement) {
 			console.warn(`Status element not found in log card: ${log.folder}`)
@@ -74,18 +104,25 @@ export default class LogsManager {
 			return
 		}
 
-		console.log('status')
-
 		logCard.dataset.status = newStatus
 		dialog.dataset.status = newStatus
 		statusElement.textContent = newStatus
 	}
 
-	updateLogCardPosition(logCard) {
+	/**
+	 * Updates the position of a log card in the UI
+	 * @param {HTMLElement} logCard - The log card element to reposition
+	 */
+	updateLogCardPosition (logCard) {
 		logCard.parentNode.prepend(logCard)
 	}
 
-	updateTimestamp(logCard, date) {
+	/**
+	 * Updates the timestamp display for a log entry
+	 * @param {HTMLElement} logCard - The log card element
+	 * @param {Object} date - The date object containing timestamp and formatted date
+	 */
+	updateTimestamp (logCard, date) {
 		const timeElement = logCard.querySelector('.log-time')
 		if (timeElement) {
 			timeElement.dataset.timestamp = date.timestamp
