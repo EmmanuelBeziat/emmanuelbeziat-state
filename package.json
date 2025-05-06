@@ -39,7 +39,7 @@
       "npx stylelint"
     ],
     "src/**/*.{js,jsx,cjs,mjs}": [
-      "npx eslint src --ext .vue,.js,.jsx,.cjs,.mj"
+      "npx eslint"
     ]
   },
   "dependencies": {
