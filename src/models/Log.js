@@ -107,6 +107,7 @@ class Log {
 			return content.trim() || 'idle'
 		}
 		catch (error) {
+			console.log(error.message)
 			return 'idle'
 		}
 	}

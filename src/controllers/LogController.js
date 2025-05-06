@@ -5,7 +5,7 @@ export class LogController {
 		this.model = new Log()
 	}
 
-	list (request, reply) {
+	list (_request, _reply) {
 		return this.model.getAllLogs()
 			.then(data => data)
 			.catch(err => { throw err })

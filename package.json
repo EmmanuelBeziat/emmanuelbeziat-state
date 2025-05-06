@@ -1,6 +1,6 @@
 {
   "name": "emmanuelbeziat-state",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "🔔 Get some build logs out without needing to connect to my server",
   "main": "src/index.js",
   "author": {
@@ -29,7 +29,18 @@
     "dev": "node --watch -r dotenv/config src/index.js",
     "prod": "nodemon -r dotenv/config src/index.js",
     "deploy": "pm2 start src/index.js --name 'emmanuelb-state' --node-args='-r dotenv/config' || pm2 reload emmanuelb-state --update-env",
-    "test": "vitest --run"
+    "lint:style": "stylelint public/**/*.{css,scss}",
+    "lint:script": "npx eslint src --ext .vue,.js,.jsx,.cjs,.mjs",
+    "test": "vitest --run",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "public/**/*.css": [
+      "npx stylelint"
+    ],
+    "src/**/*.{js,jsx,cjs,mjs}": [
+      "npx eslint src --ext .vue,.js,.jsx,.cjs,.mj"
+    ]
   },
   "dependencies": {
     "@fastify/basic-auth": "^6.2.0",
@@ -50,8 +61,16 @@
   "devDependencies": {
     "@babel/core": "^7.27.1",
     "@babel/preset-env": "^7.27.1",
+    "@eslint/js": "^9.26.0",
+    "@eslint/json": "^0.12.0",
     "cross-env": "^7.0.3",
+    "eslint": "^9.26.0",
+    "globals": "^16.0.0",
+    "husky": "^9.1.7",
     "inquirer": "^12.6.0",
+    "lint-staged": "^15.5.2",
+    "stylelint": "^16.19.1",
+    "stylelint-config-standard": "^38.0.0",
     "supertest": "^7.1.0"
   },
   "peerDependencies": {

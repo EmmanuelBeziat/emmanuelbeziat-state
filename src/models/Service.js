@@ -17,7 +17,7 @@ class Service {
 				return { name: service.name, url: service.url, online: response.ok, time: duration }
 			}
 			catch (error) {
-				return { name: service.name, url: service.url, online: false }
+				return { name: service.name, url: service.url, online: false, error: error.message }
 			}
 		}
 

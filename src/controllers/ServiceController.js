@@ -5,7 +5,7 @@ export class ServiceController {
 		this.model = new Service()
 	}
 
-	checkServices (request, reply) {
+	checkServices (_request, _reply) {
 		return this.model.checkAllServices()
 			.then(data => data)
 			.catch(err => { throw err })
