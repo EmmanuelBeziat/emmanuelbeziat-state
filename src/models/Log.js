@@ -152,14 +152,6 @@ class Log {
 			formattedDate: formatDateRelative(lastChange)
 		}
 
-		// Debug the content
-		console.log(`File change detected for ${fileName}:`, {
-			content,
-			trimmed: content.trim(),
-			type,
-			folder
-		})
-
 		if (logType === this.logFile) {
 			client.write({ folder, type, logs: content, date })
 		}
