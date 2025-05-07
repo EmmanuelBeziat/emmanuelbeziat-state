@@ -1,6 +1,6 @@
 {
   "name": "emmanuelbeziat-state",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "🔔 Get some build logs out without needing to connect to my server",
   "main": "src/index.js",
   "author": {
@@ -40,6 +40,9 @@
     ],
     "src/**/*.{js,jsx,cjs,mjs}": [
       "npx eslint"
+    ],
+    "public/**/*.{js,jsx,cjs,mjs}": [
+      "npx eslint"
     ]
   },
   "dependencies": {
@@ -62,7 +65,6 @@
     "@babel/core": "^7.27.1",
     "@babel/preset-env": "^7.27.2",
     "@eslint/js": "^9.26.0",
-    "@eslint/json": "^0.12.0",
     "cross-env": "^7.0.3",
     "eslint": "^9.26.0",
     "globals": "^16.0.0",

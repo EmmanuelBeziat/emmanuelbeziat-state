@@ -1,3 +1,5 @@
+/* global hljs */
+
 export default class LogsManager {
 	/**
 	 * Creates a new LogsManager instance
@@ -92,8 +94,14 @@ export default class LogsManager {
 	 * @param {HTMLElement} dialog - The modal dialog element
 	 */
 	updateStatusLog (log, logCard, dialog) {
-		const statusElement = logCard.querySelector('.log-status')
-		if (!statusElement) {
+		const statusCard = logCard.querySelector('.log-status')
+		if (!statusCard) {
+			console.warn(`Status element not found in log card: ${log.folder}`)
+			return
+		}
+
+		const statusDialog = dialog.querySelector('.log-status')
+		if (!statusDialog) {
 			console.warn(`Status element not found in log card: ${log.folder}`)
 			return
 		}
@@ -106,7 +114,8 @@ export default class LogsManager {
 
 		logCard.dataset.status = newStatus
 		dialog.dataset.status = newStatus
-		statusElement.textContent = newStatus
+		statusCard.textContent = newStatus
+		statusDialog.textContent = newStatus
 	}
 
 	/**

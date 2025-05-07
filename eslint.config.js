@@ -1,9 +1,16 @@
 import js from "@eslint/js"
 import globals from "globals"
-import json from "@eslint/json"
 import { defineConfig } from "eslint/config"
 
 export default defineConfig([
+  {
+		ignores: [
+			"**/node_modules/**",
+			"**/dist/**",
+			"**/vendors/**",
+			"**/tests/**"
+		]
+	},
   {
 		files: ["**/*.{js,mjs,cjs}"],
 		plugins: { js },
@@ -22,18 +29,11 @@ export default defineConfig([
 			]
 		}
 	},
-  {
-		files: ["**/*.{js,mjs,cjs}"],
+	{
 		languageOptions: {
 			globals: {
-				...globals.browser, ...globals.node
+				...globals.node, ...globals.browser
 			}
 		}
-	},
-  {
-		files: ["**/*.json"],
-		plugins: { json },
-		language: "json/json",
-		extends: ["json/recommended"]
-	},
+	}
 ])
