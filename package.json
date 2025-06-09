@@ -59,7 +59,7 @@
     "fastify-favicon": "^5.0.0",
     "highlight.js": "^11.11.1",
     "nunjucks": "^3.2.4",
-    "vitest": "^3.2.1"
+    "vitest": "^3.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.27.4",
