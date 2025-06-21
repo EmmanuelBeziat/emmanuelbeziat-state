@@ -59,7 +59,7 @@
     "fastify-favicon": "^5.0.0",
     "highlight.js": "^11.11.1",
     "nunjucks": "^3.2.4",
-    "vitest": "^3.2.3"
+    "vitest": "^3.2.4"
   },
   "devDependencies": {
     "@babel/core": "^7.27.4",
@@ -70,8 +70,8 @@
     "globals": "^16.2.0",
     "husky": "^9.1.7",
     "inquirer": "^12.6.3",
-    "lint-staged": "^16.1.0",
-    "stylelint": "^16.20.0",
+    "lint-staged": "^16.1.2",
+    "stylelint": "^16.21.0",
     "stylelint-config-standard": "^38.0.0",
     "supertest": "^7.1.1"
   },
