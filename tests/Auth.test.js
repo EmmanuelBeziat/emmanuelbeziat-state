@@ -1,6 +1,5 @@
 import { describe, beforeEach, expect, vi } from 'vitest'
 import { Auth } from '../src/classes/Auth.js'
-import basicAuth from '@fastify/basic-auth'
 
 describe('Auth Class', () => {
 	let mockFastifyInstance
@@ -19,13 +18,7 @@ describe('Auth Class', () => {
 
 	test('should initialize with correct properties', () => {
 		expect(auth.app).toBe(mockFastifyInstance)
-		expect(auth.realm).toBe('Emmanuel Béziat Logs')
 		expect(auth.publicPaths).toEqual(['/assets/', '/login'])
-	})
-
-	test('should register basicAuth in setup', () => {
-		auth.setup()
-		expect(mockFastifyInstance.register).toHaveBeenCalledWith(basicAuth, expect.any(Object))
 	})
 
 	test('validateCredentials should throw error for invalid credentials', async () => {
@@ -42,19 +35,6 @@ describe('Auth Class', () => {
 		await expect(auth.validateCredentials('user', 'pass')).resolves.not.toThrow()
 	})
 
-	test('applyAuth should call done for public paths', () => {
-		const mockDone = vi.fn()
-		const mockRequest = { url: '/assets/' }
-		auth.applyAuth(mockRequest, {}, mockDone)
-		expect(mockDone).toHaveBeenCalled()
-	})
-
-	test('applyAuth should call basicAuth for non-public paths', () => {
-		const mockRequest = { url: '/private/' }
-		auth.app.basicAuth = vi.fn()
-		auth.applyAuth(mockRequest, {}, vi.fn())
-		expect(auth.app.basicAuth).toHaveBeenCalledWith(mockRequest, {}, expect.any(Function))
-	})
 
 	test('setupLoginRoute should register GET and POST routes', () => {
 		auth.setupLoginRoute()

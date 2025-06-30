@@ -1,5 +1,3 @@
-import basicAuth from '@fastify/basic-auth'
-
 /**
  * Manages authentication for the application
  */
@@ -12,7 +10,6 @@ export class Auth {
 	constructor (app) {
 		this.app = app
 
-		this.realm = 'Emmanuel Béziat Logs'
 		this.publicPaths = ['/assets/', '/login']
 		this.setup()
 	}
@@ -21,11 +18,6 @@ export class Auth {
 	 * Sets up the authentication plugin for the Fastify instance
 	 */
 	setup () {
-		this.app.register(basicAuth, {
-			validate: this.validateCredentials,
-			authenticate: { realm: this.realm }
-		})
-
 		this.setupLoginRoute()
 		this.setupLogoutRoute()
 	}
@@ -44,20 +36,6 @@ export class Auth {
 		}
 	}
 
-	 /**
-	 * Applies authentication middleware to requests.
-	 * @param {import('fastify').FastifyRequest} request - The incoming request.
-	 * @param {import('fastify').FastifyReply} reply - The outgoing reply.
-	 * @param {Function} done - The function to call when done.
-	 */
-	applyAuth (request, reply, done) {
-		if (this.isPublicPath(request.url)) {
-			done ()
-		}
-		else {
-			this.app.basicAuth(request, reply, done)
-		}
-	}
 
 	/**
 	 * Checks if the given path should be publicly accessible.
@@ -83,12 +61,8 @@ export class Auth {
 
 			try {
 				await this.validateCredentials(username, password)
-				reply.setCookie('auth', 'true', {
-					path: '/',
-					httpOnly: true,
-					secure: process.env.NODE_ENV === 'production',
-					sameSite: 'strict'
-				}).redirect('/')
+				request.session.set('authenticated', true)
+				reply.redirect('/')
 			}
 			catch (error) {
 				reply.redirect(`/login?error=${encodeURIComponent(error.message)}`)
@@ -102,7 +76,13 @@ export class Auth {
 	 */
 	setupLogoutRoute () {
 		this.app.get('/logout', (request, reply) => {
-			reply.clearCookie('auth', { path: '/' }).redirect('/login')
+			request.session.destroy((err) => {
+				if (err) {
+					reply.status(500).send('Failed to logout')
+				} else {
+					reply.redirect('/login')
+				}
+			})
 		})
 	}
 }

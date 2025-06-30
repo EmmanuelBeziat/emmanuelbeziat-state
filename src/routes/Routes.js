@@ -42,10 +42,10 @@ export class Router {
    * @param {Function} done Callback to continue the request flow
    */
   authenticateRequest(request, reply, done) {
-    if (this.auth.isPublicPath(request.url) || request.cookies.auth === 'true') {
+    if (this.auth.isPublicPath(request.url) || request.session.get('authenticated')) {
       done()
     }
-		else {
+  else {
       reply.redirect('/login')
     }
   }

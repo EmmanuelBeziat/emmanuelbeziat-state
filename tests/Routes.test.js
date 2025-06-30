@@ -2,6 +2,7 @@ import fastify from 'fastify'
 import view from '@fastify/view'
 import nunjucks from 'nunjucks'
 import cookie from '@fastify/cookie'
+import session from '@fastify/session'
 import { Router } from '../src/routes/Routes.js'
 import { Auth } from '../src/classes/Auth.js'
 import { formatDate, formatDateRelative, sortByDate } from '../src/utils/filters.js'
@@ -14,6 +15,10 @@ describe('Routes', () => {
 		app = fastify()
 
 		app.register(cookie)
+		app.register(session, {
+			secret: 'a-very-long-and-secure-secret-for-testing',
+			cookie: { secure: false }
+		})
 		app.register(view, {
 			engine: { nunjucks },
 			root: './src/views',
@@ -34,6 +39,7 @@ describe('Routes', () => {
 		// Set environment variables for authentication
 		process.env.AUTH_USERNAME = 'testuser'
 		process.env.AUTH_PASSWORD = 'testpass'
+		process.env.SESSION_SECRET = 'a-very-long-and-secure-secret-for-testing'
 
 		// Perform login to get auth cookie
 		const response = await app.inject({
@@ -135,7 +141,7 @@ describe('Routes', () => {
 	})
 
 	test('GET /logout should clear auth cookie and redirect to login', async () => {
-		const response = await app.inject({
+		const logoutResponse = await app.inject({
 			method: 'GET',
 			url: '/logout',
 			headers: {
@@ -143,8 +149,17 @@ describe('Routes', () => {
 			}
 		})
 
-		expect(response.statusCode).toBe(302)
-		expect(response.headers['set-cookie']).toBeDefined()
-		expect(response.headers.location).toBe('/login')
+		expect(logoutResponse.statusCode).toBe(302)
+		expect(logoutResponse.headers.location).toBe('/login')
+
+		const postLogoutResponse = await app.inject({
+			method: 'GET',
+			url: '/',
+			headers: {
+				cookie: authCookie
+			}
+		})
+		expect(postLogoutResponse.statusCode).toBe(302)
+		expect(postLogoutResponse.headers.location).toBe('/login')
 	})
 })

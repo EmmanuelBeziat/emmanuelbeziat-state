@@ -12,10 +12,21 @@ import { config, nunjucksFilters } from './config/index.js'
  */
 class Server {
 	constructor () {
+		this.checkEnvVariables()
 		this.app = App
 		this.dirname = path.dirname(fileURLToPath(import.meta.url))
 
 		this.setupPlugins()
+	}
+
+	checkEnvVariables () {
+		const requiredEnv = ['AUTH_USERNAME', 'AUTH_PASSWORD', 'SESSION_SECRET']
+		const missingEnv = requiredEnv.filter(envVar => !process.env[envVar])
+
+		if (missingEnv.length > 0) {
+			console.error(`Error: Missing required environment variables: ${missingEnv.join(', ')}`)
+			process.exit(1)
+		}
 	}
 
 	setupPlugins () {
