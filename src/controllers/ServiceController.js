@@ -8,7 +8,9 @@ export class ServiceController {
 	checkServices (_request, _reply) {
 		return this.model.checkAllServices()
 			.then(data => data)
-			.catch(err => { throw err })
+			.catch(err => {
+ throw err 
+})
 	}
 
 	getServiceUrls () {

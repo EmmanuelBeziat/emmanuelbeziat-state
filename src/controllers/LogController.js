@@ -8,6 +8,8 @@ export class LogController {
 	list (_request, _reply) {
 		return this.model.getAllLogs()
 			.then(data => data)
-			.catch(err => { throw err })
+			.catch(err => {
+ throw err 
+})
 	}
 }
