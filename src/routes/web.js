@@ -1,10 +1,19 @@
 import { HomeController, LogController, ServiceController } from '../controllers/index.js'
 
+/**
+ * Defines the web routes for the application.
+ * @param {import('fastify').FastifyInstance} app - The Fastify instance.
+ * @param {Object} _opts - The options passed to the plugin.
+ */
 export default async function (app, _opts) {
 	const home = new HomeController()
 	const log = new LogController()
 	const service = new ServiceController()
 
+	/**
+	 * @route GET /
+	 * @description Renders the home page with logs and service URLs.
+	 */
 	app.get('/', async (request, reply) => {
 		try {
 			const logs = await log.list(request, reply)
@@ -16,10 +25,18 @@ export default async function (app, _opts) {
 		}
 	})
 
+	/**
+	 * @route GET /login
+	 * @description Renders the login page.
+	 */
 	app.get('/login', (request, reply) => {
 		reply.view('login.njk', { error: request.query.error })
 	})
 
+	/**
+	 * @route POST /login
+	 * @description Handles user login.
+	 */
 	app.post('/login', async (request, reply) => {
 		const { username, password } = request.body
 		try {
@@ -32,6 +49,10 @@ export default async function (app, _opts) {
 		}
 	})
 
+	/**
+	 * @route GET /logout
+	 * @description Handles user logout.
+	 */
 	app.get('/logout', (request, reply) => {
 		request.session.destroy((err) => {
 			if (err) {
@@ -43,6 +64,9 @@ export default async function (app, _opts) {
 		})
 	})
 
+	/**
+	 * @description Sets a handler for not found routes.
+	 */
 	app.setNotFoundHandler((request, reply) => {
 		reply.code(404).view('404.njk')
 	})

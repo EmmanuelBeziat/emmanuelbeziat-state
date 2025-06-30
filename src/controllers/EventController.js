@@ -6,9 +6,10 @@ export class EventController {
 	}
 
 	/**
-	 * Handles SSE connection and log watching
-	 * @param {Object} request The request object
-	 * @param {Object} reply The reply object
+	 * Handles the SSE connection, sending log updates to the client.
+	 * @param {import('fastify').FastifyRequest} request - The Fastify request object.
+	 * @param {import('fastify').FastifyReply} reply - The Fastify reply object.
+	 * @returns {Promise<void>}
 	 */
 	async handleEvents (request, reply) {
 		// Set headers to prevent timeouts
