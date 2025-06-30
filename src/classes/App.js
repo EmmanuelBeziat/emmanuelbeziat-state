@@ -1,8 +1,16 @@
 import fastify from 'fastify'
-import { Router } from '../routes/Routes.js'
 import { Auth } from './Auth.js'
 import cookie from '@fastify/cookie'
 import session from '@fastify/session'
+import formbody from '@fastify/formbody'
+import cors from '@fastify/cors'
+import rateLimit from '@fastify/rate-limit'
+import view from '@fastify/view'
+import fstatic from '@fastify/static'
+import favicons from 'fastify-favicon'
+import { config, nunjucksFilters } from '../config/index.js'
+import webRoutes from '../routes/web.js'
+import apiRoutes from '../routes/api.js'
 
 class App {
 	constructor () {
@@ -16,9 +24,42 @@ class App {
 				sameSite: 'strict'
 			}
 		})
-		this.auth = new Auth(this.app)
-		this.router = new Router(this.auth)
-		this.router.routes(this.app)
+		this.app.register(formbody)
+		this.app.register(cors, config.cors)
+		if (process.env.NODE_ENV !== 'test') {
+			this.app.register(rateLimit, {
+				max: 100,
+				timeWindow: '1 minute'
+			})
+		}
+		this.app.register(view, {
+			engine: { nunjucks: config.viewEngine },
+			root: config.paths.views,
+			options: {
+				onConfigure: nunjucksFilters,
+				noCache: process.env.NODE_ENV !== 'production'
+			}
+		})
+		this.app.register(fstatic, {
+			root: config.paths.public
+		})
+		this.app.register(favicons, {
+			path: config.paths.favicons,
+			name: 'favicon.ico'
+		})
+		this.auth = new Auth()
+
+		this.app.addHook('onRequest', (request, reply, done) => {
+			if (this.auth.isPublicPath(request.url) || request.session.get('authenticated')) {
+				done()
+			}
+			else {
+				reply.redirect('/login')
+			}
+		})
+
+		this.app.register(webRoutes, { auth: this.auth })
+		this.app.register(apiRoutes, { prefix: '/api', auth: this.auth })
 	}
 }
 

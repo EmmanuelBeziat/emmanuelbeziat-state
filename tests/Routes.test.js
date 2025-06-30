@@ -3,13 +3,13 @@ import view from '@fastify/view'
 import nunjucks from 'nunjucks'
 import cookie from '@fastify/cookie'
 import session from '@fastify/session'
-import { Router } from '../src/routes/Routes.js'
-import { Auth } from '../src/classes/Auth.js'
+import webRoutes from '../src/routes/web.js'
+import apiRoutes from '../src/routes/api.js'
 import { formatDate, formatDateRelative, sortByDate } from '../src/utils/filters.js'
 import { test, expect, beforeAll, afterAll } from 'vitest'
 
 describe('Routes', () => {
-	let app, auth, router, authCookie
+	let app, authCookie
 
 	beforeAll(async () => {
 		app = fastify()
@@ -32,9 +32,25 @@ describe('Routes', () => {
 		})
 
 		// Initialize authentication and router
-		auth = new Auth(app)
-		router = new Router(auth)
-		router.routes(app)
+		const auth = {
+			validateCredentials: async (username, password) => {
+				const isValid = username === process.env.AUTH_USERNAME && password === process.env.AUTH_PASSWORD
+				if (!isValid) {
+					throw new Error('Invalid credentials')
+				}
+			},
+			isPublicPath: (path) => ['/assets/', '/login'].some(publicPath => path.startsWith(publicPath))
+		}
+		app.addHook('onRequest', (request, reply, done) => {
+			if (auth.isPublicPath(request.url) || request.session.get('authenticated')) {
+				done()
+			}
+			else {
+				reply.redirect('/login')
+			}
+		})
+		app.register(webRoutes, { auth })
+		app.register(apiRoutes, { prefix: '/api', auth })
 
 		// Set environment variables for authentication
 		process.env.AUTH_USERNAME = 'testuser'

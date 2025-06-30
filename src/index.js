@@ -1,23 +1,10 @@
 import App from './classes/App.js'
-import cors from '@fastify/cors'
-import rateLimit from '@fastify/rate-limit'
-import view from '@fastify/view'
-import fstatic from '@fastify/static'
-import favicons from 'fastify-favicon'
-import path from 'path'
-import { fileURLToPath } from 'url'
-import { config, nunjucksFilters } from './config/index.js'
+import { config } from './config/index.js'
 
-/**
- * Initializes the server with necessary plugins and configurations
- */
 class Server {
 	constructor () {
 		this.checkEnvVariables()
 		this.app = App
-		this.dirname = path.dirname(fileURLToPath(import.meta.url))
-
-		this.setupPlugins()
 	}
 
 	checkEnvVariables () {
@@ -30,59 +17,6 @@ class Server {
 		}
 	}
 
-	setupPlugins () {
-		this.setupRateLimit()
-		this.setupCors()
-		this.setupFormBody()
-		this.setupViewEngine()
-		this.setupStaticFiles()
-		this.setupFavicons()
-	}
-
-	async setupRateLimit () {
-		if (process.env.NODE_ENV !== 'test') {
-			await this.app.register(rateLimit, {
-				max: 100,
-				timeWindow: '1 minute'
-			})
-		}
-	}
-
-	setupCors () {
-		this.app.register(cors, config.cors)
-	}
-
-	setupFormBody () {
-		this.app.register(import('@fastify/formbody'))
-	}
-
-	setupViewEngine () {
-		this.app.register(view, {
-			engine: { nunjucks: config.viewEngine },
-			root: config.paths.views,
-			options: {
-				onConfigure: nunjucksFilters,
-				noCache: process.env.NODE_ENV !== 'production'
-			}
-		})
-	}
-
-	setupStaticFiles () {
-		this.app.register(fstatic, {
-			root: config.paths.public
-		})
-	}
-
-	setupFavicons () {
-		this.app.register(favicons, {
-			path: config.paths.favicons,
-			name: 'favicon.ico'
-		})
-	}
-
-	/**
-	 * Starts the server on the specified host and port
-	 */
 	async start () {
 		try {
 			const address = await this.app.listen({ port: config.port, host: config.host })
