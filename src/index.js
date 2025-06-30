@@ -61,7 +61,8 @@ class Server {
 			engine: { nunjucks: config.viewEngine },
 			root: config.paths.views,
 			options: {
-				onConfigure: nunjucksFilters
+				onConfigure: nunjucksFilters,
+				noCache: process.env.NODE_ENV !== 'production'
 			}
 		})
 	}
