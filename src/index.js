@@ -1,5 +1,6 @@
 import App from './classes/App.js'
 import cors from '@fastify/cors'
+import rateLimit from '@fastify/rate-limit'
 import view from '@fastify/view'
 import fstatic from '@fastify/static'
 import favicons from 'fastify-favicon'
@@ -30,11 +31,21 @@ class Server {
 	}
 
 	setupPlugins () {
+		this.setupRateLimit()
 		this.setupCors()
 		this.setupFormBody()
 		this.setupViewEngine()
 		this.setupStaticFiles()
 		this.setupFavicons()
+	}
+
+	async setupRateLimit () {
+		if (process.env.NODE_ENV !== 'test') {
+			await this.app.register(rateLimit, {
+				max: 100,
+				timeWindow: '1 minute'
+			})
+		}
 	}
 
 	setupCors () {
