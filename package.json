@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",
-    "@fastify/cors": "^11.0.1",
+    "@fastify/cors": "^11.1.0",
     "@fastify/formbody": "^8.0.2",
     "@fastify/rate-limit": "^10.3.0",
     "@fastify/session": "^11.1.0",
@@ -70,7 +70,7 @@
     "globals": "^16.3.0",
     "husky": "^9.1.7",
     "inquirer": "^12.9.0",
-    "lint-staged": "^16.1.2",
+    "lint-staged": "^16.1.4",
     "stylelint": "^16.23.0",
     "stylelint-config-standard": "^39.0.0",
     "supertest": "^7.1.4"
