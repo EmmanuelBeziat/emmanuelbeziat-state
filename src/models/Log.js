@@ -5,6 +5,9 @@ import LogRepository from './log/LogRepository.js'
 import LogEventBus from './log/LogEventBus.js'
 import LogWatcher from './log/LogWatcher.js'
 
+/**
+ * High-level facade orchestrating log repository access, reading and SSE publishing
+ */
 class Log {
 	constructor () {
 		this.path = process.env.LOGS_PATH
@@ -15,8 +18,8 @@ class Log {
 		this.maxBytesTail = 64 * 1024
 
 		// Components
-		this.repo = new LogRepository(this.path, this.logFile, this.statusFile)
-		this.reader = new LogReader(this.path)
+		this.repository = new LogRepository(this.path, this.logFile, this.statusFile)
+		this.logReader = new LogReader(this.path)
 		if (!Log.eventBus) Log.eventBus = new LogEventBus()
 		if (!Log.watcher) Log.watcher = new LogWatcher()
 	}
@@ -27,7 +30,7 @@ class Log {
 	 */
 	async getAllLogs () {
 		try {
-			const folders = await this.repo.getValidFolders()
+			const folders = await this.repository.getValidFolders()
 			const logs = await this.getLogsFromFolders(folders)
 			return logs
 		}
@@ -42,17 +45,17 @@ class Log {
 	 */
 // kept for backward compatibility if used elsewhere
 	async getValidFolders () {
-		return this.repo.getValidFolders()
+		return this.repository.getValidFolders()
 	}
 
 	/**
-	 * Retrieves logs from specified folders
-	 * @param {Array} folders An array of folder names.
-	 * @returns {Promise<Array>} A romise that resovles with the logs from the folders.
+	 * Retrieves logs from specified folders.
+	 * @param {string[]} folders An array of folder names.
+	 * @returns {Promise<Array>} The logs from the folders.
 	 */
 	async getLogsFromFolders (folders) {
 		const logs = await Promise.all(folders.map(async folder => {
-			const logFilePath = this.repo.getRelativeFilePath(folder, this.logFile)
+			const logFilePath = this.repository.getRelativeFilePath(folder, this.logFile)
 
 			return this.getLogContent(logFilePath)
 				.then(async content => {
@@ -70,12 +73,12 @@ class Log {
 
 	/**
 	 * Reads the content of a file and returns it.
-	 * @param {string} filename Name of the file to read.
-	 * @returns {Promise<String>} A promise that resolves with the content of the file.
+	 * @param {string} filename Name of the file to read (relative to logs root)
+	 * @returns {Promise<string>} File content
 	 */
 	async getLogContent (filename) {
 		try {
-			return await this.reader.getLogContent(filename)
+			return await this.logReader.getLogContent(filename)
 		}
 		catch (error) {
 			throw new Error(error.message || 'An error occurend while reading the log content')
@@ -83,13 +86,13 @@ class Log {
 	}
 
 	/**
-	 * Retrieves the last modification date of a log file
-	 * @param {string} filename Name of the file to check
-	 * @returns {Promise<Date>} A promise that resolves with the last modification date of the file
+	 * Retrieves the last modification date of a log file.
+	 * @param {string} filename Name of the file to check (relative to logs root)
+	 * @returns {Promise<Date>} Modification date
 	 */
 	async getLogLastEdit (filename) {
 		try {
-			return await this.reader.getLogLastEdit(filename)
+			return await this.logReader.getLogLastEdit(filename)
 		}
 		catch (error) {
 			throw new Error(error.message || 'An error occurend while reading the log data')
@@ -115,10 +118,9 @@ class Log {
 	}
 
 	/**
-	 * Watch for changes in both output.log and status.log files
-	 * @param {object} client - SSE client object for sending updates
+	 * Subscribes an SSE client and ensures watcher is running.
+	 * @param {{write: (data: object) => void}} client Client wrapper with write()
 	 */
-	// Subscribe a client to SSE updates. Starts the shared watcher on first subscribe.
 	async subscribe (client) {
 		Log.eventBus.subscribe(client)
 		if (!Log.watcher.watcher) {
@@ -126,7 +128,10 @@ class Log {
 		}
 	}
 
-	// Unsubscribe a client. If no subscribers remain, stop the watcher.
+	/**
+	 * Unsubscribes an SSE client and stops the watcher if no clients remain.
+	 * @param {{write: (data: object) => void}} client Client wrapper
+	 */
 	async unsubscribe (client) {
 		Log.eventBus.unsubscribe(client)
 		if (Log.eventBus.size() === 0) {
@@ -134,54 +139,64 @@ class Log {
 		}
 	}
 
+	/**
+	 * Starts the shared chokidar watcher on all log and status files.
+	 */
 	async startSharedWatcher () {
-		const folders = await this.repo.getValidFolders()
+		const folders = await this.repository.getValidFolders()
 		const filesToWatch = folders.map(folder => [
-			this.repo.getAbsoluteFilePath(folder, this.logFile),
-			this.repo.getAbsoluteFilePath(folder, this.statusFile)
+			this.repository.getAbsoluteFilePath(folder, this.logFile),
+			this.repository.getAbsoluteFilePath(folder, this.statusFile)
 		]).flat()
 
 		Log.watcher.start(filesToWatch, async (filePath) => {
-			const logFileName = path.basename(filePath)
-			await this.publishChange(filePath, logFileName)
+			const changedFileName = path.basename(filePath)
+			await this.publishChange(filePath, changedFileName)
 		})
 	}
 
-// throttling is handled by LogWatcher
-
 	/**
-	 * Helper method to handle log changes (output or status)
-	 * @param {string} logFilePath - Path of the changed log file
-	 * @param {string} logType - Type of log ("output" or "status")
-	 * @param {object} client - SSE client object for sending updates
+	 * Publishes changes for either output or status file to subscribers.
+	 * @param {string} absoluteFilePath Absolute path of the changed file
+	 * @param {string} newFileName File name that changed (e.g., output.log)
 	 */
-	async publishChange (logFilePath, logType) {
-		const folder = path.basename(path.dirname(logFilePath))
-		const fileName = this.repo.getRelativeFilePath(folder, logType)
+	async publishChange (absoluteFilePath, newFileName) {
+		const folder = path.basename(path.dirname(absoluteFilePath))
+		const relativeFilePath = this.repository.getRelativeFilePath(folder, newFileName)
 
 		// Ensure file write completes
 		await new Promise(resolve => setTimeout(resolve, 100))
 
-		const absolutePath = this.repo.getAbsoluteFilePath(folder, logType)
-		const type = logType.split('.')[0]
+		const absolutePath = this.repository.getAbsoluteFilePath(folder, newFileName)
+		const logTypeBase = newFileName.split('.')[0]
 
-		const lastChange = await this.getLogLastEdit(fileName)
+		let lastChange
+		try {
+			lastChange = await this.getLogLastEdit(relativeFilePath)
+		}
+		catch {
+			lastChange = new Date()
+		}
 		const date = {
 			timestamp: lastChange,
 			formattedDate: formatDateRelative(lastChange)
 		}
 
-		if (logType === this.logFile) {
-			const logs = await this.reader.readTail(absolutePath, this.maxBytesTail)
-			this.publish({ folder, type, logs, date })
+		if (newFileName === this.logFile) {
+			const logs = await this.logReader.readTail(absolutePath, this.maxBytesTail)
+			this.publish({ folder, type: logTypeBase, logs, date })
 		}
-		else if (logType === this.statusFile) {
-			const statusContent = await this.getLogContent(fileName)
+		else if (newFileName === this.statusFile) {
+			const statusContent = await this.getLogContent(relativeFilePath)
 			const status = (statusContent || '').trim() || 'idle'
-			this.publish({ folder, type, status, date })
+			this.publish({ folder, type: logTypeBase, status, date })
 		}
 	}
 
+	/**
+	 * Broadcasts data to all subscribed clients via the event bus
+	 * @param {object} data Event payload
+	 */
 	publish (data) {
 		Log.eventBus.publish(data)
 	}
