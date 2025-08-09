@@ -17,8 +17,7 @@ export class EventController {
 			'Content-Type': 'text/event-stream',
 			'Cache-Control': 'no-cache, no-transform',
 			'Connection': 'keep-alive',
-			'X-Accel-Buffering': 'no', // Disable buffering for Nginx
-			'Access-Control-Allow-Origin': '*'
+      'X-Accel-Buffering': 'no' // Disable buffering for Nginx
 		})
 
     const client = {

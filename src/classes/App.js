@@ -5,6 +5,8 @@ import session from '@fastify/session'
 import formbody from '@fastify/formbody'
 import cors from '@fastify/cors'
 import rateLimit from '@fastify/rate-limit'
+import compress from '@fastify/compress'
+import etag from '@fastify/etag'
 import view from '@fastify/view'
 import fstatic from '@fastify/static'
 import favicons from 'fastify-favicon'
@@ -26,6 +28,11 @@ class App {
 		})
 		this.app.register(formbody)
 		this.app.register(cors, config.cors)
+		this.app.register(etag)
+		this.app.register(compress, {
+			encodings: ['br', 'gzip'],
+			global: true
+		})
 		if (process.env.NODE_ENV !== 'test') {
 			this.app.register(rateLimit, {
 				max: 100,

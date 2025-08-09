@@ -14,8 +14,8 @@ export const config = {
 		favicons: path.resolve(__dirname, '../../public/favicons')
 	},
 	cors: {
-		origin: true,
-		credentials: true
+    origin: process.env.CORS_ORIGIN || true,
+    credentials: true
 	},
 	viewEngine: nunjucks
 }
