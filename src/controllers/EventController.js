@@ -21,11 +21,11 @@ export class EventController {
 			'Access-Control-Allow-Origin': '*'
 		})
 
-		const client = {
-			write: data => {
-				reply.raw.write(`data: ${JSON.stringify(data)}\n\n`)
-			}
-		}
+    const client = {
+      write: data => {
+        reply.raw.write(`data: ${JSON.stringify(data)}\n\n`)
+      }
+    }
 
 		// Send initial connection message
 		client.write({ type: 'connection', status: 'connected' })
@@ -36,16 +36,40 @@ export class EventController {
 		}, 30000) // Send heartbeat every 30 seconds
 
 		// Clean up on connection close
-		request.raw.on('close', () => {
-			clearInterval(heartbeat)
-		})
+    request.raw.on('close', async () => {
+      clearInterval(heartbeat)
+      try {
+        await this.log.unsubscribe(client)
+      }
+      catch {
+        // ignore unsubscribe errors
+      }
+      try {
+        reply.raw.end()
+      }
+      catch {
+        // ignore end errors
+      }
+    })
 
 		try {
-			await this.log.watchLogs(client)
+      await this.log.subscribe(client)
 		}
-		catch (error) {
-			clearInterval(heartbeat)
-			throw error
-		}
+    catch (error) {
+      clearInterval(heartbeat)
+      try {
+        await this.log.unsubscribe(client)
+      }
+      catch {
+        // ignore unsubscribe errors
+      }
+      try {
+        reply.raw.end()
+      }
+      catch {
+        // ignore end errors
+      }
+      throw error
+    }
 	}
 }

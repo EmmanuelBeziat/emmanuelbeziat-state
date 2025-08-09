@@ -194,7 +194,7 @@ h1, h2, h3, h4, h5 {
 	background: var(--log-bg, var(--color-background-light));
 	color: var(--log-color, var(--color-text));
 	border: 1px solid var(--log-border, var(--color-background-lighter));
-	transition: .2s var(--ease-back-out);
+	transition: .25s var(--ease-back-out);
 
 	&:hover,
 	&:focus-visible {
@@ -255,7 +255,7 @@ h1, h2, h3, h4, h5 {
 	opacity: 0;
 	flex-direction: column;
 	gap: var(--gutter-screen-md);
-	transition: .25s var(--ease-back-out);
+	transition: .35s var(--ease-back-out);
 	transition-behavior: allow-discrete;
 	translate: 0 -1rem;
 

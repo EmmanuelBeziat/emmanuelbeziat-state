@@ -1,13 +1,24 @@
-import fs from 'fs/promises'
 import path from 'path'
-import chokidar from 'chokidar'
 import { formatDateRelative } from '../utils/filters.js'
+import LogReader from './log/LogReader.js'
+import LogRepository from './log/LogRepository.js'
+import LogEventBus from './log/LogEventBus.js'
+import LogWatcher from './log/LogWatcher.js'
 
 class Log {
 	constructor () {
 		this.path = process.env.LOGS_PATH
 		this.logFile = process.env.FILE_LOG
 		this.statusFile = process.env.FILE_STATUS
+
+		// Tunables
+		this.maxBytesTail = 64 * 1024
+
+		// Components
+		this.repo = new LogRepository(this.path, this.logFile, this.statusFile)
+		this.reader = new LogReader(this.path)
+		if (!Log.eventBus) Log.eventBus = new LogEventBus()
+		if (!Log.watcher) Log.watcher = new LogWatcher()
 	}
 
 	/**
@@ -16,7 +27,7 @@ class Log {
 	 */
 	async getAllLogs () {
 		try {
-			const folders = await this.getValidFolders()
+			const folders = await this.repo.getValidFolders()
 			const logs = await this.getLogsFromFolders(folders)
 			return logs
 		}
@@ -29,16 +40,9 @@ class Log {
 	 * Retrieves valid folders from the log directory.
 	 * @returns {Promise<Array>} A promise that resolves with an array of valid folder names.
 	 */
+// kept for backward compatibility if used elsewhere
 	async getValidFolders () {
-		const folders = await fs.readdir(path.resolve(this.path), 'utf-8')
-		if (!folders.length) throw new Error('No log folders found')
-
-		const validFolders = await Promise.all(folders.map(async folder => {
-			const stats = await fs.stat(path.resolve(this.path, folder))
-			return stats.isDirectory() ? folder : null
-		}))
-
-		return validFolders.filter(Boolean)
+		return this.repo.getValidFolders()
 	}
 
 	/**
@@ -47,8 +51,8 @@ class Log {
 	 * @returns {Promise<Array>} A romise that resovles with the logs from the folders.
 	 */
 	async getLogsFromFolders (folders) {
-		const logs = await Promise.all(folders.map(async folder =>{
-			const logFilePath = path.join(folder, this.logFile)
+		const logs = await Promise.all(folders.map(async folder => {
+			const logFilePath = this.repo.getRelativeFilePath(folder, this.logFile)
 
 			return this.getLogContent(logFilePath)
 				.then(async content => {
@@ -71,8 +75,7 @@ class Log {
 	 */
 	async getLogContent (filename) {
 		try {
-			const file = await fs.readFile(path.resolve(this.path, filename), 'utf-8')
-			return file
+			return await this.reader.getLogContent(filename)
 		}
 		catch (error) {
 			throw new Error(error.message || 'An error occurend while reading the log content')
@@ -86,8 +89,7 @@ class Log {
 	 */
 	async getLogLastEdit (filename) {
 		try {
-			const data = await fs.stat(path.resolve(this.path, filename))
-			return data.mtime
+			return await this.reader.getLogLastEdit(filename)
 		}
 		catch (error) {
 			throw new Error(error.message || 'An error occurend while reading the log data')
@@ -116,20 +118,36 @@ class Log {
 	 * Watch for changes in both output.log and status.log files
 	 * @param {object} client - SSE client object for sending updates
 	 */
-	async watchLogs (client) {
-		const folders = await this.getValidFolders()
-		const watcher = chokidar.watch(folders.map(folder => [
-			path.join(this.path, folder, this.logFile),
-			path.join(this.path, folder, this.statusFile)
-		]).flat()) // Watch both logFile and statusFile
-
-		watcher.on('change', async (logFilePath) => {
-			const logFileName = path.basename(logFilePath)
-			await this.handleLogChange(logFilePath, logFileName, client)
-		})
-
-		watcher.on('error', error => console.error('Watcher error:', error))
+	// Subscribe a client to SSE updates. Starts the shared watcher on first subscribe.
+	async subscribe (client) {
+		Log.eventBus.subscribe(client)
+		if (!Log.watcher.watcher) {
+			await this.startSharedWatcher()
+		}
 	}
+
+	// Unsubscribe a client. If no subscribers remain, stop the watcher.
+	async unsubscribe (client) {
+		Log.eventBus.unsubscribe(client)
+		if (Log.eventBus.size() === 0) {
+			await Log.watcher.stop()
+		}
+	}
+
+	async startSharedWatcher () {
+		const folders = await this.repo.getValidFolders()
+		const filesToWatch = folders.map(folder => [
+			this.repo.getAbsoluteFilePath(folder, this.logFile),
+			this.repo.getAbsoluteFilePath(folder, this.statusFile)
+		]).flat()
+
+		Log.watcher.start(filesToWatch, async (filePath) => {
+			const logFileName = path.basename(filePath)
+			await this.publishChange(filePath, logFileName)
+		})
+	}
+
+// throttling is handled by LogWatcher
 
 	/**
 	 * Helper method to handle log changes (output or status)
@@ -137,15 +155,16 @@ class Log {
 	 * @param {string} logType - Type of log ("output" or "status")
 	 * @param {object} client - SSE client object for sending updates
 	 */
-	async handleLogChange (logFilePath, logType, client) {
+	async publishChange (logFilePath, logType) {
 		const folder = path.basename(path.dirname(logFilePath))
-		const fileName = path.join(folder, logType)
+		const fileName = this.repo.getRelativeFilePath(folder, logType)
 
-		// Add a small delay to ensure file is fully written
+		// Ensure file write completes
 		await new Promise(resolve => setTimeout(resolve, 100))
 
-		const content = await this.getLogContent(fileName)
+		const absolutePath = this.repo.getAbsoluteFilePath(folder, logType)
 		const type = logType.split('.')[0]
+
 		const lastChange = await this.getLogLastEdit(fileName)
 		const date = {
 			timestamp: lastChange,
@@ -153,12 +172,18 @@ class Log {
 		}
 
 		if (logType === this.logFile) {
-			client.write({ folder, type, logs: content, date })
+			const logs = await this.reader.readTail(absolutePath, this.maxBytesTail)
+			this.publish({ folder, type, logs, date })
 		}
 		else if (logType === this.statusFile) {
-			const status = content.trim() || 'idle'
-			client.write({ folder, type, status, date })
+			const statusContent = await this.getLogContent(fileName)
+			const status = (statusContent || '').trim() || 'idle'
+			this.publish({ folder, type, status, date })
 		}
+	}
+
+	publish (data) {
+		Log.eventBus.publish(data)
 	}
 }
 
