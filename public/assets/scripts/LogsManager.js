@@ -57,6 +57,9 @@ export default class LogsManager {
 			return
 		}
 
+		// Reorder first so that subsequent style changes can transition smoothly
+		this.updateLogCardPosition(logCard)
+
 		if (log.type === 'output') {
 			this.updateOutputLog(log, dialog)
 		}
@@ -64,7 +67,6 @@ export default class LogsManager {
 			this.updateStatusLog(log, logCard, dialog)
 		}
 
-		this.updateLogCardPosition(logCard)
 		this.updateTimestamp(logCard, log.date)
 	}
 

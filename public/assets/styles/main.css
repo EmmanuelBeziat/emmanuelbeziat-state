@@ -190,11 +190,14 @@ h1, h2, h3, h4, h5 {
 }
 
 .log {
+	--timing: .5s;
+
 	border-radius: var(--radius-md);
-	background: var(--log-bg, var(--color-background-light));
+	background-color: var(--log-bg, var(--color-background-light));
 	color: var(--log-color, var(--color-text));
-	border: 1px solid var(--log-border, var(--color-background-lighter));
-	transition: .25s var(--ease-back-out);
+	border: 1px solid transparent;
+	border-color: var(--log-border, var(--color-background-lighter));
+	transition: border-color var(--timing) var(--ease-back-out), background-color var(--timing) var(--ease-back-out), box-shadow var(--timing) var(--ease-back-out);
 
 	&:hover,
 	&:focus-visible {
@@ -234,7 +237,7 @@ h1, h2, h3, h4, h5 {
 
 .log-status {
 	grid-area: Status;
-	background: var(--log-status, var(--color-subwhite));
+	background-color: var(--log-status, var(--color-subwhite));
 	color: var(--color-background-dark);
 	font-family: var(--font-stack-common);
 	border-radius: var(--radius-lg);
@@ -242,7 +245,7 @@ h1, h2, h3, h4, h5 {
 	font-size: 80%;
 	display: flex;
 	align-items: center;
-	transition: background-color .25s ease-in-out;
+	transition: background-color .25s ease-in-out, color .25s ease-in-out;
 }
 
 .log-details-modal {
