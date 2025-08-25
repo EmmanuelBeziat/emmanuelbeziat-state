@@ -8,5 +8,9 @@ import SSEManager from './SSEManager.js'
 document.addEventListener('DOMContentLoaded', () => {
 	const logsManager = new LogsManager()
 	new ServiceStatusManager()
-	new SSEManager(logsManager)
+
+	// Ne pas initialiser l'EventSource sur la page de login
+	if (!window.location.pathname.includes('/login')) {
+		new SSEManager(logsManager)
+	}
 })
