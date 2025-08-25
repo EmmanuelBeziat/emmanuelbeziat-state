@@ -27,7 +27,7 @@
     "setup": "npm ci && node setup.js",
     "start": "npm run dev",
     "dev": "node --watch -r dotenv/config src/index.js",
-    "deploy": "NODE_ENV=production pm2 start src/index.js --name 'emmanuelb-state' --node-args='-r dotenv/config' || pm2 reload emmanuelb-state --update-env",
+    "deploy": "pm2 start src/index.js --name 'emmanuelb-state' --node-args='-r dotenv/config' || pm2 reload emmanuelb-state --update-env",
     "lint:style": "stylelint public/**/*.{css,scss}",
     "lint:script": "npx eslint src --ext .vue,.js,.jsx,.cjs,.mjs",
     "test": "vitest --run",
