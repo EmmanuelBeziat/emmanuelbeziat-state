@@ -21,7 +21,7 @@ export default class SSEManager {
 	 * Sets up event handlers for connection, messages, and errors
 	 */
 	connect () {
-		const eventSource = new EventSource('/events')
+		const eventSource = new EventSource('/api/events')
 
 		eventSource.onopen = () => {
 			console.log('SSE connection established')
