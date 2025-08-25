@@ -1,7 +1,7 @@
 
 export class Auth {
 	constructor () {
-		this.publicPaths = ['/assets/', '/login']
+		this.publicPaths = ['/assets/', '/login', '/events']
 	}
 
 	/**
