@@ -45,7 +45,7 @@
     ]
   },
   "dependencies": {
-    "@fastify/compress": "^8.1.0",
+    "@fastify/compress": "^8.3.0",
     "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^11.1.0",
     "@fastify/etag": "^6.1.0",
@@ -57,21 +57,21 @@
     "chokidar": "^4.0.3",
     "dayjs": "^1.11.19",
     "dotenv": "^17.2.3",
-    "fastify": "^5.6.1",
+    "fastify": "^5.6.2",
     "fastify-favicon": "^5.0.0",
     "highlight.js": "^11.11.1",
     "nunjucks": "^3.2.4",
-    "vitest": "^4.0.6"
+    "vitest": "^4.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
-    "@eslint/js": "^9.39.0",
+    "@eslint/js": "^9.39.1",
     "cross-env": "^10.1.0",
-    "eslint": "^9.39.0",
+    "eslint": "^9.39.1",
     "globals": "^16.5.0",
     "husky": "^9.1.7",
-    "inquirer": "^12.10.0",
+    "inquirer": "^12.11.0",
     "lint-staged": "^16.2.6",
     "stylelint": "^16.25.0",
     "stylelint-config-standard": "^39.0.1",
