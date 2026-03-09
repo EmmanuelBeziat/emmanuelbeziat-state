@@ -1,6 +1,11 @@
 import App from './classes/App.js'
 import { config } from './config/index.js'
 
+/**
+ * Thin bootstrap wrapper around the Fastify app.
+ * App.js exports the raw Fastify instance (new App().app) directly;
+ * this class only adds environment variable validation before starting.
+ */
 class Server {
 	constructor () {
 		this.checkEnvVariables()

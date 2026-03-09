@@ -20,6 +20,8 @@ class Log {
 		// Components
 		this.repository = new LogRepository(this.path, this.logFile, this.statusFile)
 		this.logReader = new LogReader(this.path)
+		// Shared singletons across all Log instances: ensures a single watcher and event bus
+		// regardless of how many controllers instantiate Log.
 		if (!Log.eventBus) Log.eventBus = new LogEventBus()
 		if (!Log.watcher) Log.watcher = new LogWatcher()
 	}
@@ -164,7 +166,8 @@ class Log {
 		const folder = path.basename(path.dirname(absoluteFilePath))
 		const relativeFilePath = this.repository.getRelativeFilePath(folder, newFileName)
 
-		// Ensure file write completes
+		// Small delay to let the OS flush the file write before reading.
+		// This is a pragmatic workaround; a retry strategy would be more robust.
 		await new Promise(resolve => setTimeout(resolve, 100))
 
 		const absolutePath = this.repository.getAbsoluteFilePath(folder, newFileName)

@@ -13,10 +13,6 @@ export class ServiceController {
 	 */
 	checkServices (_request, _reply) {
 		return this.model.checkAllServices()
-			.then(data => data)
-			.catch(error => {
-				throw error
-			})
 	}
 
 	/**
