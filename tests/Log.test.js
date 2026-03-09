@@ -1,4 +1,4 @@
-import { test, expect, vi } from 'vitest'
+import { describe, test, expect, beforeEach, vi } from 'vitest'
 import Log from '../src/models/Log.js'
 import fs from 'fs/promises'
 
@@ -39,8 +39,11 @@ describe('Log Class', () => {
 
 	test('stateChange returns idle on error', async () => {
 		fs.readFile.mockRejectedValue(new Error('Read error'))
+		const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
 		const status = await log.stateChange('folder1')
 		expect(status).toBe('idle')
+
+		consoleSpy.mockRestore()
 	})
 })

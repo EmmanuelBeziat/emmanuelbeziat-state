@@ -60,9 +60,7 @@ export default class ServiceStatusManager {
 			if (!listItem || !status) return
 
 			listItem.dataset.status = service.online ? 'online' : 'offline'
-			if (service.online) {
-				listItem.dataset.time = `${service.time.toFixed(0)}ms`
-			}
+			listItem.dataset.time = service.online ? `${service.time.toFixed(0)}ms` : 'offline'
 		})
 	}
 }

@@ -1,4 +1,4 @@
-import { test, expect } from 'vitest'
+import { describe, test, expect } from 'vitest'
 import nunjucks from 'nunjucks'
 import { formatDate, formatDateRelative, sortByDate } from '../src/utils/filters.js'
 

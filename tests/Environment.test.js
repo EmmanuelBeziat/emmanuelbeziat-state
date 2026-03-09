@@ -1,4 +1,4 @@
-import { test, expect } from 'vitest'
+import { describe, test, expect } from 'vitest'
 
 describe('Environment Variables', () => {
 	test('should have PORT defined', () => {
