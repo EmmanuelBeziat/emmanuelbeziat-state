@@ -7,6 +7,7 @@ import cors from '@fastify/cors'
 import rateLimit from '@fastify/rate-limit'
 import compress from '@fastify/compress'
 import etag from '@fastify/etag'
+import helmet from '@fastify/helmet'
 import view from '@fastify/view'
 import fstatic from '@fastify/static'
 import favicons from 'fastify-favicon'
@@ -28,6 +29,18 @@ class App {
 		})
 		this.app.register(formbody)
 		this.app.register(cors, config.cors)
+		this.app.register(helmet, {
+			contentSecurityPolicy: {
+				directives: {
+					defaultSrc: ["'self'"],
+					scriptSrc: ["'self'", "'unsafe-inline'"],
+					styleSrc: ["'self'", "'unsafe-inline'"],
+					fontSrc: ["'self'"],
+					imgSrc: ["'self'", 'data:'],
+					connectSrc: ["'self'"]
+				}
+			}
+		})
 		this.app.register(etag)
 		this.app.register(compress, {
 			encodings: ['br', 'gzip'],

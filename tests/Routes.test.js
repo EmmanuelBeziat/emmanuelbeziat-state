@@ -3,6 +3,7 @@ import view from '@fastify/view'
 import nunjucks from 'nunjucks'
 import cookie from '@fastify/cookie'
 import session from '@fastify/session'
+import argon2 from 'argon2'
 import webRoutes from '../src/routes/web.js'
 import apiRoutes from '../src/routes/api.js'
 import { formatDate, formatDateRelative, sortByDate } from '../src/utils/filters.js'
@@ -34,8 +35,9 @@ describe('Routes', () => {
 		// Initialize authentication and router
 		const auth = {
 			validateCredentials: async (username, password) => {
-				const isValid = username === process.env.AUTH_USERNAME && password === process.env.AUTH_PASSWORD
-				if (!isValid) {
+				const isUsernameValid = username === process.env.AUTH_USERNAME
+				const isPasswordValid = isUsernameValid && await argon2.verify(process.env.AUTH_PASSWORD, password)
+				if (!isUsernameValid || !isPasswordValid) {
 					throw new Error('Invalid credentials')
 				}
 			},
@@ -54,7 +56,7 @@ describe('Routes', () => {
 
 		// Set environment variables for authentication
 		process.env.AUTH_USERNAME = 'testuser'
-		process.env.AUTH_PASSWORD = 'testpass'
+		process.env.AUTH_PASSWORD = await argon2.hash('testpass')
 		process.env.SESSION_SECRET = 'a-very-long-and-secure-secret-for-testing'
 
 		// Perform login to get auth cookie
@@ -125,9 +127,6 @@ describe('Routes', () => {
 	})
 
 	test('POST /login with valid credentials should set auth cookie and redirect to home', async () => {
-		process.env.AUTH_USERNAME = 'testuser'
-		process.env.AUTH_PASSWORD = 'testpass'
-
 		const response = await app.inject({
 			method: 'POST',
 			url: '/login',

@@ -1,5 +1,6 @@
 import fs from 'fs'
 import inquirer from 'inquirer'
+import argon2 from 'argon2'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
@@ -21,13 +22,19 @@ async function createEnvFile () {
   const questions = exampleContent.split('\n').filter(line => line && !line.startsWith('#')).map(line => {
     const [key] = line.split('=')
     return {
-      type: 'input',
+      type: key === 'AUTH_PASSWORD' ? 'password' : 'input',
       name: key,
       message: `${key}:`
     }
   })
 
   const responses = await inquirer.prompt(questions)
+
+  // Hash the password with argon2 before storing
+  if (responses.AUTH_PASSWORD) {
+    responses.AUTH_PASSWORD = await argon2.hash(responses.AUTH_PASSWORD)
+  }
+
   const envContent = Object.entries(responses).map(([key, value]) => `${key}=${value}`).join('\n')
   fs.writeFileSync('.env', envContent)
 }
@@ -38,16 +45,15 @@ function createDummyContent () {
   const logsPath = process.env.LOGS_PATH || '.logs'
   const fileLog = process.env.FILE_LOG || 'output.log'
   const fileStatus = process.env.FILE_STATUS || 'status.log'
-	const statusList = process.env.STATUS_LIST.split(',') || ['success']
+  const statusList = ['success', 'failure']
 
   if (!fs.existsSync(logsPath)) {
     fs.mkdirSync(logsPath)
   }
 
-	console.log(typeof statusList)
   statusList.forEach(status => {
     const folderPath = path.join(__dirname, logsPath, `test-folder-${status}`)
-    fs.mkdirSync(folderPath)
+    fs.mkdirSync(folderPath, { recursive: true })
     fs.writeFileSync(path.join(folderPath, fileLog), 'Fake log content')
     fs.writeFileSync(path.join(folderPath, fileStatus), status)
   })

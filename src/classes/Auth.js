@@ -1,4 +1,6 @@
 
+import argon2 from 'argon2'
+
 export class Auth {
 	constructor () {
 		this.publicPaths = ['/assets/', '/login', '/favicons/']
@@ -6,15 +8,17 @@ export class Auth {
 
 	/**
 	 * Validates user credentials against environment variables.
+	 * The AUTH_PASSWORD env variable must be an argon2 hash (generated via setup.js).
 	 * @param {string} username - The provided username.
 	 * @param {string} password - The provided password.
 	 * @returns {Promise<void>}
 	 * @throws {Error} If credentials are invalid.
 	 */
 	async validateCredentials (username, password) {
-		const isValid = username === process.env.AUTH_USERNAME && password === process.env.AUTH_PASSWORD
+		const isUsernameValid = username === process.env.AUTH_USERNAME
+		const isPasswordValid = isUsernameValid && await argon2.verify(process.env.AUTH_PASSWORD, password)
 
-		if (!isValid) {
+		if (!isUsernameValid || !isPasswordValid) {
 			throw new Error('Invalid credentials')
 		}
 	}

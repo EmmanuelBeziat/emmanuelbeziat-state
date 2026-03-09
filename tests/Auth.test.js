@@ -1,22 +1,24 @@
-import { describe, test, expect } from 'vitest'
+import { describe, test, expect, beforeAll } from 'vitest'
+import argon2 from 'argon2'
 import { Auth } from '../src/classes/Auth.js'
 
 describe('Auth Class', () => {
 	const auth = new Auth()
+
+	beforeAll(async () => {
+		process.env.AUTH_USERNAME = 'user'
+		process.env.AUTH_PASSWORD = await argon2.hash('pass')
+	})
 
 	test('should initialize with correct public paths', () => {
 		expect(auth.publicPaths).toEqual(['/assets/', '/login', '/favicons/'])
 	})
 
 	test('validateCredentials should throw error for invalid credentials', async () => {
-		process.env.AUTH_USERNAME = 'user'
-		process.env.AUTH_PASSWORD = 'pass'
 		await expect(auth.validateCredentials('wrongUser', 'wrongPass')).rejects.toThrow('Invalid credentials')
 	})
 
 	test('validateCredentials should not throw error for valid credentials', async () => {
-		process.env.AUTH_USERNAME = 'user'
-		process.env.AUTH_PASSWORD = 'pass'
 		await expect(auth.validateCredentials('user', 'pass')).resolves.not.toThrow()
 	})
 
