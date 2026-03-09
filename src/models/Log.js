@@ -35,7 +35,7 @@ class Log {
 			return logs
 		}
 		catch (error) {
-			throw new Error(error.message || 'Unable to read logs folders')
+			throw new Error(error.message || 'Unable to read logs folders', { cause: error })
 		}
 	}
 
@@ -81,7 +81,7 @@ class Log {
 			return await this.logReader.getLogContent(filename)
 		}
 		catch (error) {
-			throw new Error(error.message || 'An error occurend while reading the log content')
+			throw new Error(error.message || 'An error occurred while reading the log content', { cause: error })
 		}
 	}
 
@@ -95,7 +95,7 @@ class Log {
 			return await this.logReader.getLogLastEdit(filename)
 		}
 		catch (error) {
-			throw new Error(error.message || 'An error occurend while reading the log data')
+			throw new Error(error.message || 'An error occurred while reading the log data', { cause: error })
 		}
 	}
 
@@ -112,7 +112,7 @@ class Log {
 			return content.trim() || 'idle'
 		}
 		catch (error) {
-			console.log(error.message)
+			console.error(error.message)
 			return 'idle'
 		}
 	}

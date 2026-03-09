@@ -21,7 +21,7 @@ export default class LogRepository {
 	 * @returns {Promise<string[]>} Array of folder names
 	 */
 	async getValidFolders () {
-		const folders = await fs.readdir(path.resolve(this.rootPath), 'utf-8')
+		const folders = await fs.readdir(path.resolve(this.rootPath), { encoding: 'utf-8' })
 		if (!folders.length) throw new Error('No log folders found')
 
 		const validFolders = await Promise.all(folders.map(async folderName => {

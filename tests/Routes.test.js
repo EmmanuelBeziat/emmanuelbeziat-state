@@ -6,7 +6,7 @@ import session from '@fastify/session'
 import webRoutes from '../src/routes/web.js'
 import apiRoutes from '../src/routes/api.js'
 import { formatDate, formatDateRelative, sortByDate } from '../src/utils/filters.js'
-import { test, expect, beforeAll, afterAll } from 'vitest'
+import { test, describe, expect, beforeAll, afterAll } from 'vitest'
 
 describe('Routes', () => {
 	let app, authCookie
@@ -39,7 +39,7 @@ describe('Routes', () => {
 					throw new Error('Invalid credentials')
 				}
 			},
-			isPublicPath: (path) => ['/assets/', '/login'].some(publicPath => path.startsWith(publicPath))
+			isPublicPath: (path) => ['/assets/', '/login', '/favicons/'].some(publicPath => path.startsWith(publicPath))
 		}
 		app.addHook('onRequest', (request, reply, done) => {
 			if (auth.isPublicPath(request.url) || request.session.get('authenticated')) {

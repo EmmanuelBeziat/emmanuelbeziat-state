@@ -23,7 +23,7 @@ export default class LogReader {
 			return fileContent
 		}
 		catch (error) {
-			throw new Error(error.message || 'An error occurend while reading the log content')
+			throw new Error(error.message || 'An error occurred while reading the log content', { cause: error })
 		}
 	}
 
@@ -38,7 +38,7 @@ export default class LogReader {
 			return fileStats.mtime
 		}
 		catch (error) {
-			throw new Error(error.message || 'An error occurend while reading the log data')
+			throw new Error(error.message || 'An error occurred while reading the log data', { cause: error })
 		}
 	}
 

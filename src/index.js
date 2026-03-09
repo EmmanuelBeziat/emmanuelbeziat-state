@@ -8,7 +8,7 @@ class Server {
 	}
 
 	checkEnvVariables () {
-		const requiredEnv = ['AUTH_USERNAME', 'AUTH_PASSWORD', 'SESSION_SECRET']
+		const requiredEnv = ['AUTH_USERNAME', 'AUTH_PASSWORD', 'SESSION_SECRET', 'SERVICES_LIST']
 		const missingEnv = requiredEnv.filter(envVar => !process.env[envVar])
 
 		if (missingEnv.length > 0) {

@@ -5,7 +5,7 @@ describe('Auth Class', () => {
 	const auth = new Auth()
 
 	test('should initialize with correct public paths', () => {
-		expect(auth.publicPaths).toEqual(['/assets/', '/login', '/events'])
+		expect(auth.publicPaths).toEqual(['/assets/', '/login', '/favicons/'])
 	})
 
 	test('validateCredentials should throw error for invalid credentials', async () => {
