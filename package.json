@@ -59,6 +59,7 @@
     "chokidar": "^5.0.0",
     "dayjs": "^1.11.20",
     "dotenv": "^17.3.1",
+    "emojilib": "^4.0.2",
     "fastify": "^5.8.2",
     "fastify-favicon": "^5.0.0",
     "highlight.js": "^11.11.1",
