@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
 import path from 'path'
-import emojis from 'emojilib'
+import emojis from 'emojilib' with { type: 'json' }
 
 /**
  * Builds a reverse mapping from keyword to emoji
