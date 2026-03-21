@@ -8,6 +8,64 @@ env.addFilter('formatDate', formatDate)
 env.addFilter('formatDateRelative', formatDateRelative)
 env.addFilter('sortByDate', sortByDate)
 
+// Emoji map and emojify filter for tests
+const emojiMap = new Map([
+	[':arrow_up:', '⬆️'],
+	[':arrow_down:', '⬇️'],
+	[':arrow_left:', '⬅️'],
+	[':arrow_right:', '➡️'],
+	[':check:', '✅'],
+	[':x:', '❌'],
+	[':warning:', '⚠️'],
+	[':information_source:', 'ℹ️'],
+	[':question:', '❓'],
+	[':exclamation:', '❗'],
+	[':bulb:', '💡'],
+	[':rocket:', '🚀'],
+	[':fire:', '🔥'],
+	[':sparkles:', '✨'],
+	[':zap:', '⚡'],
+	[':cloud:', '☁️'],
+	[':sun:', '☀️'],
+	[':moon:', '🌙'],
+	[':star:', '⭐'],
+	[':heart:', '❤️'],
+	[':thumbsup:', '👍'],
+	[':thumbsdown:', '👎'],
+	[':ok_hand:', '👌'],
+	[':wave:', '👋'],
+	[':eyes:', '👀'],
+	[':speech_balloon:', '💬'],
+	[':bell:', '🔔'],
+	[':lock:', '🔒'],
+	[':unlock:', '🔓'],
+	[':key:', '🔑'],
+	[':gear:', '⚙️'],
+	[':wrench:', '🔧'],
+	[':hammer:', '🔨'],
+	[':computer:', '💻'],
+	[':mobile_phone:', '📱'],
+	[':email:', '📧'],
+	[':calendar:', '📅'],
+	[':clock:', '🕐'],
+	[':hourglass:', '⏳'],
+	[':trash:', '🗑️'],
+	[':file:', '📄'],
+	[':folder:', '📁'],
+	[':mag:', '🔍'],
+])
+
+function emojify (text) {
+	if (!text) return text
+	let result = text
+	for (const [shortcode, emoji] of emojiMap) {
+		result = result.replaceAll(shortcode, emoji)
+	}
+	return result
+}
+
+env.addFilter('emojify', emojify)
+
 describe('Nunjucks Templates', () => {
 
 	test('modal.njk renders correctly', () => {

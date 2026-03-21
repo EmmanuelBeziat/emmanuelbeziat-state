@@ -1,17 +1,5 @@
 import fs from 'fs/promises'
 import path from 'path'
-import emojis from 'emojilib' with { type: 'json' }
-
-/**
- * Builds a reverse mapping from keyword to emoji
- * @type {Map<string, string>}
- */
-const emojiMap = new Map()
-for (const [emoji, keywords] of Object.entries(emojis)) {
-	for (const keyword of keywords) {
-		emojiMap.set(`:${keyword}:`, emoji)
-	}
-}
 
 /**
  * Regular expression to match ANSI escape sequences
@@ -41,19 +29,6 @@ export default class LogReader {
 	}
 
 	/**
-	 * Converts shortcodes like :arrow_up: to actual emojis
-	 * @param {string} text Text containing emoji shortcodes
-	 * @returns {string} Text with shortcodes converted to emojis
-	 */
-	emojify (text) {
-		let result = text
-		for (const [shortcode, emoji] of emojiMap) {
-			result = result.replaceAll(shortcode, emoji)
-		}
-		return result
-	}
-
-	/**
 	 * Reads the content of a log file
 	 * @param {string} relativeFilePath File path relative to logs root
 	 * @returns {Promise<string>} File content as UTF-8 string
@@ -61,7 +36,7 @@ export default class LogReader {
 	async getLogContent (relativeFilePath) {
 		try {
 			const fileContent = await fs.readFile(path.resolve(this.rootPath, relativeFilePath), 'utf-8')
-			return this.emojify(this.stripAnsi(fileContent))
+			return this.stripAnsi(fileContent)
 		}
 		catch (error) {
 			throw new Error(error.message || 'An error occurred while reading the log content', { cause: error })
@@ -104,7 +79,7 @@ export default class LogReader {
 				const newlineIndex = text.indexOf('\n')
 				if (newlineIndex !== -1) text = text.slice(newlineIndex + 1)
 			}
-			return this.emojify(this.stripAnsi(text))
+			return this.stripAnsi(text)
 		}
 		catch {
 			return ''
