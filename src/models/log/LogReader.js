@@ -2,6 +2,13 @@ import fs from 'fs/promises'
 import path from 'path'
 
 /**
+ * Regular expression to match ANSI escape sequences
+ * Matches sequences like: \x1b[1m, \x1b[46m, \x1b[0m, etc.
+ */
+// eslint-disable-next-line no-control-regex
+const ANSI_ESCAPE_REGEX = /\x1b\[[0-9;]*[A-Za-z]/g
+
+/**
  * Provides low-level file reading utilities for logs
  */
 export default class LogReader {
@@ -13,6 +20,15 @@ export default class LogReader {
 	}
 
 	/**
+	 * Removes ANSI escape sequences from text
+	 * @param {string} text Text containing ANSI escape sequences
+	 * @returns {string} Text with ANSI sequences removed
+	 */
+	stripAnsi (text) {
+		return text.replace(ANSI_ESCAPE_REGEX, '')
+	}
+
+	/**
 	 * Reads the content of a log file
 	 * @param {string} relativeFilePath File path relative to logs root
 	 * @returns {Promise<string>} File content as UTF-8 string
@@ -20,7 +36,7 @@ export default class LogReader {
 	async getLogContent (relativeFilePath) {
 		try {
 			const fileContent = await fs.readFile(path.resolve(this.rootPath, relativeFilePath), 'utf-8')
-			return fileContent
+			return this.stripAnsi(fileContent)
 		}
 		catch (error) {
 			throw new Error(error.message || 'An error occurred while reading the log content', { cause: error })
@@ -63,7 +79,7 @@ export default class LogReader {
 				const newlineIndex = text.indexOf('\n')
 				if (newlineIndex !== -1) text = text.slice(newlineIndex + 1)
 			}
-			return text
+			return this.stripAnsi(text)
 		}
 		catch {
 			return ''
