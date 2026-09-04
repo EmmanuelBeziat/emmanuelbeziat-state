@@ -28,4 +28,4 @@ export const config = {
  * Environment variables that must be set for the server to start.
  * @see src/index.js's Server.checkEnvVariables
  */
-export const requiredEnv = ['AUTH_USERNAME', 'AUTH_PASSWORD', 'SESSION_SECRET', 'SERVICES_LIST']
+export const requiredEnv = ['AUTH_USERNAME', 'AUTH_PASSWORD', 'SESSION_SECRET', 'SESSION_SALT', 'SERVICES_LIST']

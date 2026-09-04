@@ -1,7 +1,6 @@
 import fastify from 'fastify'
 import { Auth } from './Auth.js'
-import cookie from '@fastify/cookie'
-import session from '@fastify/session'
+import secureSession from '@fastify/secure-session'
 import formbody from '@fastify/formbody'
 import cors from '@fastify/cors'
 import rateLimit from '@fastify/rate-limit'
@@ -18,10 +17,13 @@ import apiRoutes from '../routes/api.js'
 class App {
 	constructor () {
 		this.app = fastify()
-		this.app.register(cookie)
-		this.app.register(session, {
+		// Session data is encrypted directly into the cookie (no server-side store), so it
+		// survives process restarts (e.g. a deploy) instead of being lost with in-memory state.
+		this.app.register(secureSession, {
 			secret: process.env.SESSION_SECRET,
+			salt: Buffer.from(process.env.SESSION_SALT, 'hex'),
 			cookie: {
+				path: '/',
 				secure: process.env.NODE_ENV === 'production',
 				httpOnly: true,
 				sameSite: 'strict'

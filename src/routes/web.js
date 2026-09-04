@@ -54,14 +54,8 @@ export default async function (app, _opts) {
 	 * @description Handles user logout.
 	 */
 	app.get('/logout', (request, reply) => {
-		request.session.destroy((err) => {
-			if (err) {
-				reply.status(500).send('Failed to logout')
-			}
-			else {
-				reply.redirect('/login')
-			}
-		})
+		request.session.delete()
+		reply.redirect('/login')
 	})
 
 	/**

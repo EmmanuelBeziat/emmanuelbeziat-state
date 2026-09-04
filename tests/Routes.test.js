@@ -1,8 +1,7 @@
 import fastify from 'fastify'
 import view from '@fastify/view'
 import nunjucks from 'nunjucks'
-import cookie from '@fastify/cookie'
-import session from '@fastify/session'
+import secureSession from '@fastify/secure-session'
 import argon2 from 'argon2'
 import webRoutes from '../src/routes/web.js'
 import apiRoutes from '../src/routes/api.js'
@@ -15,10 +14,10 @@ describe('Routes', () => {
 	beforeAll(async () => {
 		app = fastify()
 
-		app.register(cookie)
-		app.register(session, {
+		app.register(secureSession, {
 			secret: 'a-very-long-and-secure-secret-for-testing',
-			cookie: { secure: false }
+			salt: Buffer.from('0123456789abcdef'),
+			cookie: { path: '/', secure: false }
 		})
 		app.register(view, {
 			engine: { nunjucks },
@@ -226,11 +225,15 @@ describe('Routes', () => {
 		expect(logoutResponse.statusCode).toBe(302)
 		expect(logoutResponse.headers.location).toBe('/login')
 
+		// A real browser adopts the logout response's Set-Cookie (which clears the session)
+		// for its next request, rather than resending the pre-logout cookie value — with
+		// secure-session's stateless, encrypted cookie there is no server-side session to
+		// revoke, so the request must actually carry the cleared cookie to be unauthenticated.
 		const postLogoutResponse = await app.inject({
 			method: 'GET',
 			url: '/',
 			headers: {
-				cookie: authCookie
+				cookie: logoutResponse.headers['set-cookie']
 			}
 		})
 		expect(postLogoutResponse.statusCode).toBe(302)

@@ -5,6 +5,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import dotenv from 'dotenv'
+import { randomBytes } from 'crypto'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -19,7 +20,9 @@ async function createEnvFile () {
   const examplePath = path.join(__dirname, '.env.example')
   const exampleContent = fs.readFileSync(examplePath, 'utf8')
 
-  const questions = exampleContent.split('\n').filter(line => line && !line.startsWith('#')).map(line => {
+  // SESSION_SALT must be an exact 16-byte value for @fastify/secure-session — generated
+  // below instead of prompted for, since typing that by hand is error-prone.
+  const questions = exampleContent.split('\n').filter(line => line && !line.startsWith('#') && !line.startsWith('SESSION_SALT=')).map(line => {
     const [key] = line.split('=')
     return {
       type: key === 'AUTH_PASSWORD' ? 'password' : 'input',
@@ -34,6 +37,8 @@ async function createEnvFile () {
   if (responses.AUTH_PASSWORD) {
     responses.AUTH_PASSWORD = await argon2.hash(responses.AUTH_PASSWORD)
   }
+
+  responses.SESSION_SALT = randomBytes(16).toString('hex')
 
   const envContent = Object.entries(responses).map(([key, value]) => `${key}=${value}`).join('\n')
   fs.writeFileSync('.env', envContent)
