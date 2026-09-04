@@ -10,8 +10,9 @@ export default class SSEManager {
 	constructor (logsManager) {
 		this.logsManager = logsManager
 		this.reconnectAttempts = 0
-		this.maxReconnectAttempts = 5
 		this.reconnectDelay = 5000
+		this.maxReconnectDelay = 30000
+		this.hasDroppedConnection = false
 
 		this.connect()
 	}
@@ -24,6 +25,12 @@ export default class SSEManager {
 		const eventSource = new EventSource('/api/events')
 
 		eventSource.onopen = () => {
+			if (this.hasDroppedConnection) {
+				console.log('SSE reconnected after a drop — reloading to resync state')
+				window.location.reload()
+				return
+			}
+
 			console.log('SSE connection established')
 			this.reconnectAttempts = 0
 		}
@@ -42,6 +49,7 @@ export default class SSEManager {
 
 		eventSource.onerror = error => {
 			console.error('SSE error:', error)
+			this.hasDroppedConnection = true
 			eventSource.close()
 			this.handleReconnection()
 		}
@@ -64,18 +72,14 @@ export default class SSEManager {
 	}
 
 	/**
-	 * Handles reconnection attempts with exponential backoff
-	 * Attempts to reconnect up to maxReconnectAttempts times
+	 * Handles reconnection attempts with exponential backoff, plateauing at
+	 * maxReconnectDelay instead of giving up — a dropped connection (e.g. a deploy
+	 * restart) should always eventually reconnect on its own.
 	 */
 	handleReconnection () {
-		if (this.reconnectAttempts < this.maxReconnectAttempts) {
-			this.reconnectAttempts++
-			const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1)
-			console.log(`Attempting to reconnect in ${delay/1000} seconds… (Attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`)
-			setTimeout(() => this.connect(), delay)
-		}
-		else {
-			console.error('Max reconnection attempts reached. Please refresh the page.')
-		}
+		this.reconnectAttempts++
+		const delay = Math.min(this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1), this.maxReconnectDelay)
+		console.log(`Attempting to reconnect in ${delay / 1000} seconds… (attempt ${this.reconnectAttempts})`)
+		setTimeout(() => this.connect(), delay)
 	}
 }
