@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest'
-import { formatDate, formatDateRelative, sortByDate } from '../src/utils/filters.js'
+import { formatDate, formatDateRelative, formatDateTime, sortByDate } from '../src/utils/filters.js'
 
 describe('sortByDate', () => {
 	test('sorts items by date in descending order', () => {
@@ -25,6 +25,21 @@ describe('sortByDate', () => {
 		const items = [{ date: '2023-01-01' }]
 		const sortedItems = sortByDate(items)
 		expect(sortedItems).toEqual(items)
+	})
+
+	test('does not mutate the input array', () => {
+		const items = [
+			{ date: '2023-01-01' },
+			{ date: '2023-01-02' }
+		]
+		const original = [...items]
+		sortByDate(items)
+		expect(items).toEqual(original)
+	})
+
+	test('returns a different array instance than the input', () => {
+		const items = [{ date: '2023-01-01' }]
+		expect(sortByDate(items)).not.toBe(items)
 	})
 })
 
@@ -61,5 +76,25 @@ describe('formatDateRelative', () => {
 	test('handles invalid date input for relative time', () => {
 		const relativeTime = formatDateRelative('invalid date')
 		expect(relativeTime).toBe('Invalid Date')
+	})
+})
+
+describe('formatDateTime', () => {
+	test('formats a Date in YYYY-MM-DD HH:mm:ss', () => {
+		const date = new Date('2023-01-05T09:07:03')
+		expect(formatDateTime(date)).toBe('2023-01-05 09:07:03')
+	})
+
+	test('handles string date input', () => {
+		expect(formatDateTime('2023-01-05T09:07:03')).toBe('2023-01-05 09:07:03')
+	})
+
+	test('zero-pads single-digit month, day, hour, minute and second', () => {
+		const date = new Date('2023-02-03T04:05:06')
+		expect(formatDateTime(date)).toBe('2023-02-03 04:05:06')
+	})
+
+	test('handles invalid date input', () => {
+		expect(formatDateTime('invalid date')).toBe('Invalid Date')
 	})
 })

@@ -1,35 +1,24 @@
 import { describe, test, expect } from 'vitest'
+import { requiredEnv } from '../src/config/config.js'
 
 describe('Environment Variables', () => {
-	test('should have PORT defined', () => {
-		expect(process.env.PORT).toBeDefined()
+	// Sourced from src/config/config.js, the same list src/index.js's Server.checkEnvVariables
+	// enforces at startup — kept in one place so this test can't silently drift from it.
+	describe.each(requiredEnv)('%s', envVar => {
+		test('is defined', () => {
+			expect(process.env[envVar]).toBeDefined()
+		})
 	})
 
-	test('should have HOST defined', () => {
-		expect(process.env.HOST).toBeDefined()
+	test('SERVICES_LIST is valid JSON', () => {
+		expect(() => JSON.parse(process.env.SERVICES_LIST)).not.toThrow()
 	})
 
-	test('should have LOGS_PATH path defined', () => {
-		expect(process.env.LOGS_PATH).toBeDefined()
-	})
-
-	test('should have FILE_LOG path defined', () => {
-		expect(process.env.FILE_LOG).toBeDefined()
-	})
-
-	test('should have FILE_STATUS path defined', () => {
-		expect(process.env.FILE_STATUS).toBeDefined()
-	})
-
-	test('should have SERVICES_LIST path defined', () => {
-		expect(process.env.SERVICES_LIST).toBeDefined()
-	})
-
-	test('should have AUTH_USERNAME credential defined', () => {
-		expect(process.env.AUTH_USERNAME).toBeDefined()
-	})
-
-	test('should have AUTH_PASSWORD credential defined', () => {
-		expect(process.env.AUTH_PASSWORD).toBeDefined()
+	// These have defaults in src/config/config.js, so they aren't required to start the
+	// server, but setup.js/.env.example expect a local dev environment to define them.
+	describe.each(['PORT', 'HOST', 'LOGS_PATH', 'FILE_LOG', 'FILE_STATUS'])('%s', envVar => {
+		test('is defined', () => {
+			expect(process.env[envVar]).toBeDefined()
+		})
 	})
 })

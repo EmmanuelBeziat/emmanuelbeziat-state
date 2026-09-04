@@ -13,9 +13,5 @@ export class LogController {
 	 */
 	list (_request, _reply) {
 		return this.model.getAllLogs()
-			.then(data => data)
-			.catch(error => {
-				throw error
-			})
 	}
 }

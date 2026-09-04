@@ -1,6 +1,8 @@
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime.js'
 
+dayjs.extend(relativeTime)
+
 /**
  * Formats a date to a string in the format 'DD/MM/YYYY HH:mm:ss'.
  * @param {Date|string} date - The date to format.
@@ -8,12 +10,26 @@ import relativeTime from 'dayjs/plugin/relativeTime.js'
  */
 export const formatDate = date => {
 	if (!(date instanceof Date)) {
- date = new Date(date)
-}
+		date = new Date(date)
+	}
 	if (isNaN(date.getTime())) return 'Invalid Date'
 
 	const options = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }
 	return new Intl.DateTimeFormat('en', options).format(date).replace(',', '')
+}
+
+/**
+ * Formats a date to a string in the format 'YYYY-MM-DD HH:mm:ss', suitable for the
+ * HTML <time> element's `datetime` attribute.
+ * @param {Date|string} date - The date to format.
+ * @returns {string} The formatted date string.
+ */
+export const formatDateTime = date => {
+	if (!(date instanceof Date)) {
+		date = new Date(date)
+	}
+	if (isNaN(date.getTime())) return 'Invalid Date'
+	return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
 }
 
 /**
@@ -23,9 +39,8 @@ export const formatDate = date => {
  */
 export const formatDateRelative = date => {
 	if (!(date instanceof Date)) {
- date = new Date(date)
-}
+		date = new Date(date)
+	}
 	if (isNaN(date.getTime())) return 'Invalid Date'
-	dayjs.extend(relativeTime)
 	return dayjs(date).fromNow()
 }

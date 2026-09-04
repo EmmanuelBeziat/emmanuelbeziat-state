@@ -14,7 +14,6 @@
 	--color-back: var(--color-black);
 	--color-front: var(--color-white);
 	--color-front-sub: var(--color-subwhite);
-	--color-separator: var(--color-back-light);
 	--color-back-dark: hsl(from var(--color-back) h s calc(l - 1));
 	--color-back-darker: hsl(from var(--color-back) h s calc(l - 3));
 	--color-back-light: hsl(from var(--color-back) h s calc(l + 5));
@@ -59,10 +58,6 @@
 	--gutter-md: calc(var(--gutter-base) * var(--gutter-growth)); /* 1.5rem / 24px */
 	--gutter-lg: calc(var(--gutter-md) * var(--gutter-growth)); /* 2.25rem / 36px */
 	--gutter-xl: calc(var(--gutter-lg) * var(--gutter-growth)); /* 3.375rem / 54px */
-
-	@media (width <= 768px) {
-		--gutter-base: 1rem;
-	}
 
 	/* sizes */
 	--container-width: 25rem;

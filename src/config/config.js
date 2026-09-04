@@ -15,7 +15,17 @@ export const config = {
 	},
 	cors: {
 		origin: process.env.CORS_ORIGIN || true,
-		credentials: true
+		credentials: Boolean(process.env.CORS_ORIGIN)
+	},
+	rateLimit: {
+		max: 100,
+		timeWindow: '1 minute'
 	},
 	viewEngine: nunjucks
 }
+
+/**
+ * Environment variables that must be set for the server to start.
+ * @see src/index.js's Server.checkEnvVariables
+ */
+export const requiredEnv = ['AUTH_USERNAME', 'AUTH_PASSWORD', 'SESSION_SECRET', 'SERVICES_LIST']

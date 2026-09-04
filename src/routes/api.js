@@ -50,11 +50,6 @@ export default async function (app, _opts) {
 	 * @description Establishes a Server-Sent Events (SSE) connection to stream log updates.
 	 */
 	app.get('/events', async (request, reply) => {
-		try {
-			await event.handleEvents(request, reply)
-		}
-		catch (error) {
-			reply.status(500).send({ error: error.message || 'Unable to establish SSE connection' })
-		}
+		await event.handleEvents(request, reply)
 	})
 }

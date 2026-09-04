@@ -42,15 +42,6 @@ class Log {
 	}
 
 	/**
-	 * Retrieves valid folders from the log directory.
-	 * @returns {Promise<Array>} A promise that resolves with an array of valid folder names.
-	 */
-// kept for backward compatibility if used elsewhere
-	async getValidFolders () {
-		return this.repository.getValidFolders()
-	}
-
-	/**
 	 * Retrieves logs from specified folders.
 	 * @param {string[]} folders An array of folder names.
 	 * @returns {Promise<Array>} The logs from the folders.
@@ -126,7 +117,10 @@ class Log {
 	async subscribe (client) {
 		Log.eventBus.subscribe(client)
 		if (!Log.watcher.watcher) {
-			await this.startSharedWatcher()
+			Log.watcherStartPromise ??= this.startSharedWatcher().finally(() => {
+				Log.watcherStartPromise = null
+			})
+			await Log.watcherStartPromise
 		}
 	}
 

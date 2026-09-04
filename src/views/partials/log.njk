@@ -2,7 +2,7 @@
 	<header class="log-header log-details-opener">
 		<h2 class="log-title">{{ log.name }}</h2>
 		<div class="log-status">{{ log.status }}</div>
-		<time class="log-time" data-realtime timestamp="{{ log.date }}">{{ log.date | formatDateRelative }}</time>
+		<time class="log-time" data-realtime data-timestamp="{{ log.date }}" datetime="{{ log.date | formatDateTime }}">{{ log.date | formatDateRelative }}</time>
 	</header>
 </article>
 

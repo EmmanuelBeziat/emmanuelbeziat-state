@@ -1,5 +1,5 @@
 import App from './classes/App.js'
-import { config } from './config/index.js'
+import { config, requiredEnv } from './config/index.js'
 
 /**
  * Thin bootstrap wrapper around the Fastify app.
@@ -13,7 +13,6 @@ class Server {
 	}
 
 	checkEnvVariables () {
-		const requiredEnv = ['AUTH_USERNAME', 'AUTH_PASSWORD', 'SESSION_SECRET', 'SERVICES_LIST']
 		const missingEnv = requiredEnv.filter(envVar => !process.env[envVar])
 
 		if (missingEnv.length > 0) {

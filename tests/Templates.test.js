@@ -1,11 +1,12 @@
 import { describe, test, expect } from 'vitest'
 import nunjucks from 'nunjucks'
-import { formatDate, formatDateRelative, sortByDate } from '../src/utils/filters.js'
+import { formatDate, formatDateRelative, formatDateTime, sortByDate } from '../src/utils/filters.js'
 
 const env = nunjucks.configure('src/views', { autoescape: true })
 
 env.addFilter('formatDate', formatDate)
 env.addFilter('formatDateRelative', formatDateRelative)
+env.addFilter('formatDateTime', formatDateTime)
 env.addFilter('sortByDate', sortByDate)
 
 // Emoji map and emojify filter for tests

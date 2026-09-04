@@ -131,3 +131,6 @@ dist
 .pnp.*
 
 .logs
+
+CLAUDE.md
+AGENTS.md

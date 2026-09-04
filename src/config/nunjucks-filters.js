@@ -1,4 +1,4 @@
-import { formatDate, formatDateRelative, sortByDate } from '../utils/filters.js'
+import { formatDate, formatDateRelative, formatDateTime, sortByDate } from '../utils/filters.js'
 
 /**
  * Emoji shortcode mappings (common ones)
@@ -71,6 +71,7 @@ function emojify (text) {
 export const nunjucksFilters = env => {
 	env.addFilter('formatDate', formatDate)
 	env.addFilter('formatDateRelative', formatDateRelative)
+	env.addFilter('formatDateTime', formatDateTime)
 	env.addFilter('sortByDate', sortByDate)
 	env.addFilter('emojify', emojify)
 }

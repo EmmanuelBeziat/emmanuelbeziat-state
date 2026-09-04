@@ -29,7 +29,14 @@ export default class SSEManager {
 		}
 
 		eventSource.onmessage = event => {
-			const data = JSON.parse(event.data)
+			let data
+			try {
+				data = JSON.parse(event.data)
+			}
+			catch (error) {
+				console.error('SSE message parse error:', error)
+				return
+			}
 			this.handleMessage(data)
 		}
 

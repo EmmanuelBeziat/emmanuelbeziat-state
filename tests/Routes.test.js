@@ -6,7 +6,7 @@ import session from '@fastify/session'
 import argon2 from 'argon2'
 import webRoutes from '../src/routes/web.js'
 import apiRoutes from '../src/routes/api.js'
-import { formatDate, formatDateRelative, sortByDate } from '../src/utils/filters.js'
+import { formatDate, formatDateRelative, formatDateTime, sortByDate } from '../src/utils/filters.js'
 import { test, describe, expect, beforeAll, afterAll } from 'vitest'
 
 describe('Routes', () => {
@@ -27,6 +27,7 @@ describe('Routes', () => {
 				onConfigure: env => {
 					env.addFilter('formatDate', formatDate)
 					env.addFilter('formatDateRelative', formatDateRelative)
+					env.addFilter('formatDateTime', formatDateTime)
 					env.addFilter('sortByDate', sortByDate)
 
 					// Emoji map and emojify filter

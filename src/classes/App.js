@@ -47,10 +47,7 @@ class App {
 			global: true
 		})
 		if (process.env.NODE_ENV !== 'test') {
-			this.app.register(rateLimit, {
-				max: 100,
-				timeWindow: '1 minute'
-			})
+			this.app.register(rateLimit, config.rateLimit)
 		}
 		this.app.register(view, {
 			engine: { nunjucks: config.viewEngine },

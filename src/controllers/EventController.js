@@ -12,6 +12,8 @@ export class EventController {
 	 * @returns {Promise<void>}
 	 */
 	async handleEvents (request, reply) {
+		reply.hijack()
+
 		// Set headers to prevent timeouts
 		reply.raw.writeHead(200, {
 			'Content-Type': 'text/event-stream',
@@ -34,8 +36,7 @@ export class EventController {
 			sseClient.write({ type: 'heartbeat', timestamp: Date.now() })
 		}, 30000) // Send heartbeat every 30 seconds
 
-		// Clean up on connection close
-		request.raw.on('close', async () => {
+		const cleanup = async () => {
 			clearInterval(heartbeatIntervalId)
 			try {
 				await this.log.unsubscribe(sseClient)
@@ -49,26 +50,17 @@ export class EventController {
 			catch {
 				// ignore end errors
 			}
-		})
+		}
+
+		// Clean up on connection close
+		request.raw.on('close', cleanup)
 
 		try {
 			await this.log.subscribe(sseClient)
 		}
 		catch (error) {
-			clearInterval(heartbeatIntervalId)
-			try {
-				await this.log.unsubscribe(sseClient)
-			}
-			catch {
-				// ignore unsubscribe errors
-			}
-			try {
-				reply.raw.end()
-			}
-			catch {
-				// ignore end errors
-			}
-			throw error
+			sseClient.write({ type: 'error', message: error.message || 'Unable to establish SSE connection' })
+			await cleanup()
 		}
 	}
 }

@@ -56,11 +56,23 @@ const emojiMap = new Map([
  * @returns {string} Text with shortcodes converted to emojis
  */
 function emojify (text) {
+	if (!text) return text
 	let result = text
 	for (const [shortcode, emoji] of emojiMap) {
 		result = result.replaceAll(shortcode, emoji)
 	}
 	return result
+}
+
+/**
+ * Escapes HTML special characters so text can be safely assigned to innerHTML.
+ * @param {string} text - Raw text that may contain HTML-significant characters.
+ * @returns {string} Text with &, <, >, " and ' escaped.
+ */
+function escapeHtml (text) {
+	const div = document.createElement('div')
+	div.textContent = text
+	return div.innerHTML
 }
 
 export default class LogsManager {
@@ -87,7 +99,12 @@ export default class LogsManager {
 	setupModal (log) {
 		const opener = log.querySelector('.log-details-opener')
 		const dialog = document.getElementById(`modal-${log.id}`)
-		const closer = dialog.querySelector('.log-details-closer')
+		const closer = dialog?.querySelector('.log-details-closer')
+
+		if (!opener || !dialog || !closer) {
+			console.warn(`Modal setup skipped: missing element(s) for log card "${log.id}"`)
+			return
+		}
 
 		opener.addEventListener('click', () => dialog.showModal())
 		closer.addEventListener('click', () => dialog.close())
@@ -145,7 +162,7 @@ export default class LogsManager {
 			return
 		}
 
-		code.innerHTML = emojify(log.logs)
+		code.innerHTML = emojify(escapeHtml(log.logs))
 		if (code.closest('.log-details-modal[open]')) {
 			code.removeAttribute('data-highlighted')
 			hljs.highlightElement(code)
