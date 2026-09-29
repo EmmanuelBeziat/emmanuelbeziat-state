@@ -20,6 +20,13 @@ describe('LogRepository', () => {
 		await expect(repository.getValidFolders()).rejects.toThrow('No log folders found')
 	})
 
+	test('getValidFolders throws when the log directory holds only files', async () => {
+		fs.readdir.mockResolvedValue(['README.md'])
+		fs.stat.mockResolvedValue({ isDirectory: () => false })
+
+		await expect(repository.getValidFolders()).rejects.toThrow('No log folders found')
+	})
+
 	test('getValidFolders returns only directory entries, filtering out files', async () => {
 		fs.readdir.mockResolvedValue(['build-1', 'build-2', 'README.md'])
 		fs.stat.mockImplementation(async targetPath => ({

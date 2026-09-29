@@ -67,6 +67,22 @@ describe('LogWatcher', () => {
 		expect(onFileChanged).toHaveBeenCalledTimes(2)
 	})
 
+	test('start() throws if the callback is not a function', () => {
+		expect(() => watcher.start(['/logs/a/output.log'])).toThrow('onFileChanged must be a function')
+	})
+
+	test('logs a rejected async callback instead of leaving it unhandled', async () => {
+		const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+		const error = new Error('read failed')
+		watcher.start(['/logs/a/output.log'], vi.fn().mockRejectedValue(error))
+
+		handlers.change('/logs/a/output.log')
+		await vi.advanceTimersByTimeAsync(200)
+
+		expect(consoleSpy).toHaveBeenCalledWith('Watcher callback error:', error)
+		consoleSpy.mockRestore()
+	})
+
 	test('stop() closes the watcher and cancels pending debounced callbacks', async () => {
 		const onFileChanged = vi.fn()
 		watcher.start(['/logs/a/output.log'], onFileChanged)

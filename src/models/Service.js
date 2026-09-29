@@ -1,16 +1,13 @@
+import { parseServicesList, parseServicesTimeout } from '../config/config.js'
+
 /**
  * Checks external services availability
  */
 class Service {
 	constructor () {
 		/** @type {{name:string, url:string}[]} */
-		try {
-			this.servicesList = JSON.parse(process.env.SERVICES_LIST)
-		}
-		catch {
-			throw new Error('SERVICES_LIST environment variable is missing or contains invalid JSON')
-		}
-		this.timeoutMs = Number(process.env.SERVICES_TIMEOUT_MS || 5000)
+		this.servicesList = parseServicesList(process.env.SERVICES_LIST)
+		this.timeoutMs = parseServicesTimeout(process.env.SERVICES_TIMEOUT_MS)
 	}
 
 	/**

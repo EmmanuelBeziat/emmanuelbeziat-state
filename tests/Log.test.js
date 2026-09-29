@@ -187,5 +187,17 @@ describe('Log Class', () => {
 				status: 'success'
 			}))
 		})
+
+		test('throws for a file that is neither the log nor the status file', async () => {
+			vi.spyOn(log.logReader, 'getLogLastEdit').mockResolvedValue(new Date('2023-01-01T00:00:00Z'))
+			const publishSpy = vi.spyOn(log, 'publish')
+
+			const promise = log.publishChange('/logs/build-1/unexpected.txt', 'unexpected.txt')
+			const assertion = expect(promise).rejects.toThrow('Unexpected watched file: unexpected.txt')
+			await vi.advanceTimersByTimeAsync(100)
+			await assertion
+
+			expect(publishSpy).not.toHaveBeenCalled()
+		})
 	})
 })

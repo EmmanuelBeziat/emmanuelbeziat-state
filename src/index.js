@@ -1,5 +1,4 @@
-import App from './classes/App.js'
-import { config, requiredEnv } from './config/index.js'
+import { config, validateEnv } from './config/index.js'
 
 /**
  * Thin bootstrap wrapper around the Fastify app.
@@ -9,20 +8,21 @@ import { config, requiredEnv } from './config/index.js'
 class Server {
 	constructor () {
 		this.checkEnvVariables()
-		this.app = App
 	}
 
 	checkEnvVariables () {
-		const missingEnv = requiredEnv.filter(envVar => !process.env[envVar])
+		const envErrors = validateEnv(process.env)
 
-		if (missingEnv.length > 0) {
-			console.error(`Error: Missing required environment variables: ${missingEnv.join(', ')}`)
+		if (envErrors.length > 0) {
+			console.error(`Error: Invalid environment:\n- ${envErrors.join('\n- ')}`)
 			process.exit(1)
 		}
 	}
 
 	async start () {
 		try {
+			const { default: app } = await import('./classes/App.js')
+			this.app = app
 			const address = await this.app.listen({ port: config.port, host: config.host })
 			console.log(`Server started on ${address}`)
 		}

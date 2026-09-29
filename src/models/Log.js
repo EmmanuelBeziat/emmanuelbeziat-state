@@ -160,8 +160,6 @@ class Log {
 		const folder = path.basename(path.dirname(absoluteFilePath))
 		const relativeFilePath = this.repository.getRelativeFilePath(folder, newFileName)
 
-		// Small delay to let the OS flush the file write before reading.
-		// This is a pragmatic workaround; a retry strategy would be more robust.
 		await new Promise(resolve => setTimeout(resolve, 100))
 
 		const absolutePath = this.repository.getAbsoluteFilePath(folder, newFileName)
@@ -187,6 +185,9 @@ class Log {
 			const statusContent = await this.getLogContent(relativeFilePath)
 			const status = (statusContent || '').trim() || 'idle'
 			this.publish({ folder, type: logTypeBase, status, date })
+		}
+		else {
+			throw new Error(`Unexpected watched file: ${newFileName}`)
 		}
 	}
 

@@ -22,6 +22,20 @@ describe('Service Class', () => {
 		expect(() => new Service()).toThrow('SERVICES_LIST environment variable is missing or contains invalid JSON')
 	})
 
+	test('throws when SERVICES_LIST is not an array of {name, url}', () => {
+		process.env.SERVICES_LIST = '{"name":"App","url":"http://example.com"}'
+		expect(() => new Service()).toThrow('SERVICES_LIST must be a JSON array')
+
+		process.env.SERVICES_LIST = '[{"name":"App"}]'
+		expect(() => new Service()).toThrow('SERVICES_LIST[0] must have string "name" and "url" properties')
+	})
+
+	test('throws when SERVICES_TIMEOUT_MS is not a positive number', () => {
+		process.env.SERVICES_LIST = '[]'
+		process.env.SERVICES_TIMEOUT_MS = '5s'
+		expect(() => new Service()).toThrow('SERVICES_TIMEOUT_MS must be a positive number')
+	})
+
 	test('parses a valid SERVICES_LIST and defaults the timeout to 5000ms', () => {
 		process.env.SERVICES_LIST = JSON.stringify([{ name: 'App', url: 'http://example.com' }])
 		delete process.env.SERVICES_TIMEOUT_MS

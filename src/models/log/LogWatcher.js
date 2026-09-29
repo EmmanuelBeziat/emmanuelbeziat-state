@@ -21,6 +21,7 @@ export default class LogWatcher {
 	 */
 	start (absoluteFilePaths, onFileChanged) {
 		if (this.watcher) return
+		if (typeof onFileChanged !== 'function') throw new TypeError('onFileChanged must be a function')
 		this.onFileChangedCallback = onFileChanged
 		this.watcher = chokidar.watch(absoluteFilePaths)
 		this.watcher.on('change', (filePath) => this.enqueue(filePath))
@@ -49,13 +50,13 @@ export default class LogWatcher {
 	 */
 	enqueue (filePath) {
 		if (this.timers.has(filePath)) clearTimeout(this.timers.get(filePath))
-		const timeoutId = setTimeout(() => {
+		const timeoutId = setTimeout(async () => {
 			this.timers.delete(filePath)
 			try {
-				this.onFileChangedCallback?.(filePath)
+				await this.onFileChangedCallback(filePath)
 			}
-			catch {
-				// ignore
+			catch (error) {
+				console.error('Watcher callback error:', error)
 			}
 		}, this.throttleMs)
 		this.timers.set(filePath, timeoutId)
