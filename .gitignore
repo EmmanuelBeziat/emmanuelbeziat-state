@@ -132,6 +132,8 @@ dist
 
 .logs
 
-CLAUDE.md
+# LLM
 AGENTS.md
+CLAUDE.md
+.claude
 .kilo
