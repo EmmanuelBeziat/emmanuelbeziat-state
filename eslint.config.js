@@ -1,21 +1,25 @@
-import js from "@eslint/js"
-import globals from "globals"
-import { defineConfig } from "eslint/config"
+import js from '@eslint/js'
+import globals from 'globals'
+import { defineConfig } from 'eslint/config'
 
 export default defineConfig([
-  {
+	{
 		ignores: [
-			"**/node_modules/**",
-			"**/dist/**",
-			"**/vendors/**",
-			"**/tests/**"
+			'**/node_modules/**',
+			'**/dist/**',
+			'**/vendors/**',
+			'**/tests/**'
 		]
 	},
-  {
-		files: ["**/*.{js,mjs,cjs}"],
+	{
+		files: ['**/*.{js,mjs,cjs}'],
 		plugins: { js },
-		extends: ["js/recommended"],
+		extends: ['js/recommended'],
 		rules: {
+			indent: ['error', 'tab', { SwitchCase: 1 }],
+			'linebreak-style': ['error', 'unix'],
+			quotes: ['error', 'single', { avoidEscape: true }],
+			semi: ['error', 'never'],
 			'no-tabs': 'off',
 			'brace-style': [
 				'error',
